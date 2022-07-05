@@ -5,7 +5,8 @@ using UnityEngine;
 public class movement : MonoBehaviour
 {
     public Rigidbody rb; //accessing the rigidbody
-    public float force = 1000f; //defining variable for size of force being applied to the character
+    public float force = 1000000f; //defining variable for size of force being applied to the character
+    public answers answers;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,12 @@ public class movement : MonoBehaviour
         }
         if (Input.GetKey("d")) {
             rb.AddRelativeForce(force * Time.deltaTime, 0, 0);
+        }
+        if (answers.frozen == 1) { //freezing character when character touches answer
+            force = 0;
+        }
+        if (answers.frozen == 0) { //unfreezing the character when character is able to answer
+            force = 1000000f;
         }
     }
 }
