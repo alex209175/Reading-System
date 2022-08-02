@@ -25,6 +25,8 @@ public class answers : MonoBehaviour
 
     int questionNum = 0; //current question that the player is on
 
+    bool freezeNPCs = true;
+
     string[] questions = { //Array which stores the questions
         "Peter, who was very naughty, ran straight away to Mr. McGregor's garden, and squeezed under the ____?", 
         "First he ate some lettuces and some French beans; and then he ate some _____?",
@@ -75,6 +77,7 @@ public class answers : MonoBehaviour
     public Texture incorrect; //accessing the red texture for the answer selection object
     public Texture neutral; //accessing the blue text for the answer selection object
     Renderer Renderer; //accessing the renderer for the answer selection object
+    bool usedEnter = false;
 
     // Start is called before the first frame update
     void Start()
@@ -94,7 +97,8 @@ public class answers : MonoBehaviour
     {
         //Debug.Log(answeredNum);
         timerText.text = time.ToString(); //updating timer text
-        if(time == 0) {
+        if(time == 0 || Input.GetKeyDown("space") && !usedEnter) {
+            usedEnter = true;
             frozen = 1; //freeze the character
             if (answeredNum != 0) {
                 if (answeredNum == correctAnswer[questionNum]) {
@@ -136,13 +140,15 @@ public class answers : MonoBehaviour
         }
     }
     IEnumerator timer() {
-        while (time != 0) {
+        while (time != 0 && !usedEnter) {
             yield return new WaitForSeconds(1); //decreasing the time variable unless it is equal to zero
             time--;
         }
     }
     IEnumerator wait() {
         yield return new WaitForSeconds(2); //wait for two seconds
+        freezeNPCs = false;
+        usedEnter = false;
         answerText1.GetComponent<TextMeshPro>().text = storedAnswers[questionNum][0];
         answerText2.GetComponent<TextMeshPro>().text = storedAnswers[questionNum][1];
         answerText3.GetComponent<TextMeshPro>().text = storedAnswers[questionNum][2];
