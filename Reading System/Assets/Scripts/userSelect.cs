@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class userSelect : MonoBehaviour
 {
-    string URL = "https://localhost/readingsystem/userSelect.php";
+    string URL = "http://localhost/PHP/createUser.php";
     public string [] usersData;
     // Start is called before the first frame update
     IEnumerator Start()

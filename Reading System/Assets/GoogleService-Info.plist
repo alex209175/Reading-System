@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>403669133322-o5ca0cd6j9tou01ph3v7m719ilgh54rk.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.403669133322-o5ca0cd6j9tou01ph3v7m719ilgh54rk</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA2bUw96QcCcl1GWHXlB56owznCeepO9vY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>403669133322</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.edsolutionsnz.easyReaderDataBase</string>
+	<key>PROJECT_ID</key>
+	<string>easyreader-8e67b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>easyreader-8e67b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:403669133322:ios:8214830dadbb1233d817f3</string>
+</dict>
+</plist>
