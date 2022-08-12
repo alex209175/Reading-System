@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "403669133322",
+    "project_id": "easyreader-8e67b",
+    "storage_bucket": "easyreader-8e67b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:403669133322:android:e71e33c953391112d817f3",
+        "android_client_info": {
+          "package_name": "com.edsolutionsnz.easyReaderDataBase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "403669133322-q6ejdqqpjvkfdn49vmaghap6vtnp2qgj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQXDVTKDT4NxAHWsjI_9jf8HyVE4iasBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "403669133322-q6ejdqqpjvkfdn49vmaghap6vtnp2qgj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "403669133322-o5ca0cd6j9tou01ph3v7m719ilgh54rk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.edsolutionsnz.easyReaderDataBase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
