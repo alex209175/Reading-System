@@ -51,7 +51,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: None
+        CPU: x86_64
   - first:
       Standalone: OSXUniversal
     second:
@@ -63,13 +63,13 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: None
+        CPU: x86
   - first:
       Standalone: Win64
     second:
       enabled: 1
       settings:
-        CPU: None
+        CPU: x86_64
   - first:
       Windows Store Apps: WindowsStoreApps
     second:
