@@ -5,16 +5,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
 using Firebase.Database;
-//using Firebase.Auth;
+using TMPro;
 
 public class loadData : MonoBehaviour
 {
+    public TextMeshProUGUI Level1Text;
+    public TextMeshProUGUI Level2Text;
+    public TextMeshProUGUI Level3Text;
+
     int localValue;
     DatabaseReference reference; //defining reference to database
     
     void Start ()
     {
         localValue = PlayerPrefs.GetInt("Level1Score");
+        Level1Text.text = ("Level 1 - " + ((localValue - 1).ToString()) + "/5");
         Debug.Log(localValue);
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         FirebaseDatabase.DefaultInstance.GetReference("Level1Score").ValueChanged += HandleUpdateScore;

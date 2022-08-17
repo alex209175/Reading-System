@@ -27,6 +27,7 @@ public class nextPage : MonoBehaviour
     void Start()
     {
         pageCount = pageParent.transform.childCount; //counts number of pages
+        Debug.Log(pageCount);
         Button btn = button.GetComponent<Button>(); //accessing button component
         Button prevBtn = prevButton.GetComponent<Button>(); //accessing button component
 
