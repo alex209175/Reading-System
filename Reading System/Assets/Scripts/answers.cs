@@ -6,6 +6,7 @@ using TMPro;
 
 public class answers : MonoBehaviour
 {
+    public int correctAnswers = 1; //sets number of correct answers to 1 by default so that even if the score is 0, it will show that the student has attempted the task.
     public int frozen = 1; //disable ability for player to move
     int answeredNum = 0; //variable for the answer that the user selects
 
@@ -102,7 +103,10 @@ public class answers : MonoBehaviour
             frozen = 1; //freeze the character
             if (answeredNum != 0) {
                 if (answeredNum == correctAnswer[questionNum]) {
+                    correctAnswers++; //increments number of correct answers
                     QandAtext.text = "Ka Pai!";
+                    PlayerPrefs.SetInt("Level1Score", correctAnswers);
+                    Debug.Log(PlayerPrefs.GetInt("Level1Score"));
                     Renderer.material.mainTexture = correct; //Player gets correct answer, colour changes to green, and correct text appears
                 }
                 else {
@@ -165,7 +169,7 @@ public class answers : MonoBehaviour
         questionNum++; //incrementing the question number by 1
         Renderer.material.mainTexture = neutral;
         if (questionNum + 1 > questions.Length) {
-            SceneManager.LoadScene(0); //loads menu screen once questions are finished
+            SceneManager.LoadScene(2); //loads learning tree screen once questions are finished
         }
         QandAtext.text = "Round " + (questionNum + 1).ToString();
         transform.position = new Vector3(x, y, z); //reset position of character
