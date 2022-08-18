@@ -38,6 +38,13 @@ public class nextPage : MonoBehaviour
         pageNumber = 1;
         prev = pageParent.transform.GetChild(pageNumber - 1).gameObject;
         next = pageParent.transform.GetChild(pageNumber).gameObject;
+
+        if (SceneManager.GetActiveScene().name == "PeterRabbit") {
+            PlayerPrefs.SetInt("CurrentBook", 1); //Uses this later in game to find which questions to be showing
+        }
+        if (SceneManager.GetActiveScene().name == "JackAndTheBeanstalk") {
+            PlayerPrefs.SetInt("CurrentBook", 2); //Uses this later in game to find which questions to be showing
+        }
     }
 
     // Update is called once per frame

@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LearningTree.unity
     guid: 64108e89e26e5384c9b5631150e523ab
+  - enabled: 1
+    path: Assets/Scenes/JackAndTheBeanstalk.unity
+    guid: 37440e77ae2106e498086641181594ca
   m_configObjects: {}

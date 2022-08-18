@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Firebase;
 using Firebase.Database;
@@ -13,14 +14,31 @@ public class loadData : MonoBehaviour
     public TextMeshProUGUI Level2Text;
     public TextMeshProUGUI Level3Text;
 
-    int localValue;
+    int lvl1;
+    int lvl2;
+
     DatabaseReference reference; //defining reference to database
     
     void Start ()
     {
-        localValue = PlayerPrefs.GetInt("Level1Score");
-        Level1Text.text = ("Level 1 - " + ((localValue - 1).ToString()) + "/5");
-        Debug.Log(localValue);
+        lvl1 = PlayerPrefs.GetInt("Level1Score");
+
+        if (lvl1 > 0) {
+            Level1Text.text = ("Peter Rabbit - " + ((lvl1 - 1).ToString()) + "/5"); //if the task is attempted, it will display the score
+        }
+        else {
+            Level1Text.text = ("Peter Rabbit - not attempted"); //if not, shows not attempted
+        }
+
+        lvl2 = PlayerPrefs.GetInt("Level2Score");
+
+        if (lvl2 > 0) {
+            Level2Text.text = ("Jack and the Beanstalk - " + ((lvl2 - 1).ToString()) + "/5");
+        }
+        else {
+            Level2Text.text = ("Jack and the Beanstalk - not attempted");
+        }
+
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         FirebaseDatabase.DefaultInstance.GetReference("Level1Score").ValueChanged += HandleUpdateScore;
         UpdateScore();
@@ -34,7 +52,6 @@ public class loadData : MonoBehaviour
     }
 
     public void UpdateScore () {
-        Debug.Log(localValue);
         //writeNewUser();
         Debug.Log("test");
         //Debug.Log(auth);
@@ -72,9 +89,28 @@ public class loadData : MonoBehaviour
                 //value = localValue;
                 //Debug.Log(PlayerPrefs.GetInt("Level1Score"));
                 //Debug.Log(value);
-                reference.Child("Level1Score").SetValueAsync(localValue);
+                reference.Child("Level1Score").SetValueAsync(lvl1);
             }
         });
+
+        FirebaseDatabase.DefaultInstance.GetReference("Level2Score").GetValueAsync().ContinueWith(task => {
+            if (task.IsFaulted) {
+                Debug.LogError(task);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                //int value = int.Parse(Convert.ToString(snapshot.Value));
+                //value = localValue;
+                //Debug.Log(PlayerPrefs.GetInt("Level1Score"));
+                //Debug.Log(value);
+                reference.Child("Level2Score").SetValueAsync(lvl2);
+            }
+        });
+    }
+
+    public void nextBook() {
+        SceneManager.LoadScene("JackAndTheBeanstalk");
     }
 /*
     private void writeNewUser() {

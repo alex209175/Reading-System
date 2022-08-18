@@ -27,8 +27,8 @@ public class answers : MonoBehaviour
     int questionNum = 0; //current question that the player is on
 
     bool freezeNPCs = true;
-
-    string[] questions = { //Array which stores the questions
+    
+    string[] questions = new string[] { //Array which stores the questions
         "Peter, who was very naughty, ran straight away to Mr. McGregor's garden, and squeezed under the ____?", 
         "First he ate some lettuces and some French beans; and then he ate some _____?",
         "Who is Peter running from?",
@@ -36,7 +36,7 @@ public class answers : MonoBehaviour
         "But Flopsy, Mopsy, and Cotton-tail had bread and milk and ______ for supper."
     };
 
-    string[][] storedAnswers = //Arrar which stores the answers
+    string[][] storedAnswers = new string[][]//Array which stores the answers
     { 
         new string[] {
             "Ground",
@@ -83,6 +83,44 @@ public class answers : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (PlayerPrefs.GetInt("CurrentBook") == 2) {
+            questions[0] = "What is the name of the cow in the story?"; //changes questions if on Jack and the Beanstalk
+            questions[1] = "The man had a large, curly moustache and was wearing a sparkly yellow ______";
+            questions[2] = "What showed Jack that the beanstalk had grown overnight?";
+            questions[3] = "Fee! Fi! Fo! Fum! I smell the blood of an _________?";
+            questions[4] = "Which two items did Jack steal from the giant?";
+
+            storedAnswers[0][0] = "Derrick"; //Displays answers
+            storedAnswers[0][1] = "Daisy";
+            storedAnswers[0][2] = "Donald";
+            storedAnswers[0][3] = "Daesy";
+
+            storedAnswers[1][0] = "Coat";
+            storedAnswers[1][1] = "Jacket";
+            storedAnswers[1][2] = "Balaclava";
+            storedAnswers[1][3] = "Cloak";
+
+            storedAnswers[2][0] = "The smell";
+            storedAnswers[2][1] = "A shadow";
+            storedAnswers[2][2] = "A stomping noise";
+            storedAnswers[2][3] = "The cow";
+
+            storedAnswers[3][0] = "Egyptianman";
+            storedAnswers[3][1] = "Englishman";
+            storedAnswers[3][2] = "Irishman";
+            storedAnswers[3][3] = "Americanman";
+
+            storedAnswers[4][0] = "A harp and a hen";
+            storedAnswers[4][1] = "A harp and a fox";
+            storedAnswers[4][2] = "A piano and an egg";
+            storedAnswers[4][3] = "A piano and a hen";
+
+            correctAnswer[0] = 2; //defining correct answers for quiz
+            correctAnswer[1] = 4;
+            correctAnswer[2] = 2;
+            correctAnswer[3] = 2;
+            correctAnswer[4] = 1; 
+        }
         x = transform.position.x; //accessing starting position
         y = transform.position.y;
         z = transform.position.z;
@@ -105,8 +143,14 @@ public class answers : MonoBehaviour
                 if (answeredNum == correctAnswer[questionNum]) {
                     correctAnswers++; //increments number of correct answers
                     QandAtext.text = "Ka Pai!";
-                    PlayerPrefs.SetInt("Level1Score", correctAnswers);
-                    Debug.Log(PlayerPrefs.GetInt("Level1Score"));
+                    if(PlayerPrefs.GetInt("CurrentBook") == 1) {
+                        PlayerPrefs.SetInt("Level1Score", correctAnswers);
+                        Debug.Log(PlayerPrefs.GetInt("Level1Score"));
+                    }
+                    if(PlayerPrefs.GetInt("CurrentBook") == 2) {
+                        PlayerPrefs.SetInt("Level2Score", correctAnswers);
+                        Debug.Log(PlayerPrefs.GetInt("Level2Score"));
+                    }
                     Renderer.material.mainTexture = correct; //Player gets correct answer, colour changes to green, and correct text appears
                 }
                 else {
