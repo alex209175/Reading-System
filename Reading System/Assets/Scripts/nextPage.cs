@@ -45,6 +45,9 @@ public class nextPage : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "JackAndTheBeanstalk") {
             PlayerPrefs.SetInt("CurrentBook", 2); //Uses this later in game to find which questions to be showing
         }
+        if (SceneManager.GetActiveScene().name == "TeIkaAMaui") {
+            PlayerPrefs.SetInt("CurrentBook", 3); //Uses this later in game to find which questions to be showing
+        }
     }
 
     // Update is called once per frame

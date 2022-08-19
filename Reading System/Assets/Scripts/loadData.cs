@@ -16,6 +16,8 @@ public class loadData : MonoBehaviour
 
     int lvl1;
     int lvl2;
+    int lvl3;
+
 
     DatabaseReference reference; //defining reference to database
     
@@ -37,6 +39,15 @@ public class loadData : MonoBehaviour
         }
         else {
             Level2Text.text = ("Jack and the Beanstalk - not attempted");
+        }
+
+        lvl3 = PlayerPrefs.GetInt("Level3Score");
+
+        if (lvl3 > 0) {
+            Level3Text.text = ("Te Ika a Māui - " + ((lvl3 - 1).ToString()) + "/5");
+        }
+        else {
+            Level3Text.text = ("Te Ika a Māui - not attempted");
         }
 
         reference = FirebaseDatabase.DefaultInstance.RootReference;
@@ -105,6 +116,20 @@ public class loadData : MonoBehaviour
                 //Debug.Log(PlayerPrefs.GetInt("Level1Score"));
                 //Debug.Log(value);
                 reference.Child("Level2Score").SetValueAsync(lvl2);
+            }
+        });
+        FirebaseDatabase.DefaultInstance.GetReference("Level3Score").GetValueAsync().ContinueWith(task => {
+            if (task.IsFaulted) {
+                Debug.LogError(task);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                //int value = int.Parse(Convert.ToString(snapshot.Value));
+                //value = localValue;
+                //Debug.Log(PlayerPrefs.GetInt("Level1Score"));
+                //Debug.Log(value);
+                reference.Child("Level3Score").SetValueAsync(lvl3);
             }
         });
     }

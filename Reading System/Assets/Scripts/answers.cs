@@ -121,6 +121,46 @@ public class answers : MonoBehaviour
             correctAnswer[3] = 2;
             correctAnswer[4] = 1; 
         }
+
+        if (PlayerPrefs.GetInt("CurrentBook") == 3) {
+            questions[0] = "Who was Māui raised by?"; //changes questions if on Te Ika A Maui
+            questions[1] = "How many sons did Tangaroa have?";
+            questions[2] = "What else is the main character Māui called in this story?";
+            questions[3] = "What do you think 'elated' means?";
+            questions[4] = "Where would you go in New Zealand if you wanted to stand on Māui's hook?";
+
+            storedAnswers[0][0] = "Taranga"; //Displays answers
+            storedAnswers[0][1] = "Tangaroa";
+            storedAnswers[0][2] = "Tama-nui-ki-te Rangi";
+            storedAnswers[0][3] = "Māui-i-roto";
+
+            storedAnswers[1][0] = "4";
+            storedAnswers[1][1] = "None";
+            storedAnswers[1][2] = "5";
+            storedAnswers[1][3] = "7";
+
+            storedAnswers[2][0] = "Māui-potiki";
+            storedAnswers[2][1] = "Māui-i-mua";
+            storedAnswers[2][2] = "Māui-i-pai";
+            storedAnswers[2][3] = "Māui the Trickster";
+
+            storedAnswers[3][0] = "Furious";
+            storedAnswers[3][1] = "Excited";
+            storedAnswers[3][2] = "Sad";
+            storedAnswers[3][3] = "Very happy";
+
+            storedAnswers[4][0] = "Cape Kidnappers";
+            storedAnswers[4][1] = "Stewart Island";
+            storedAnswers[4][2] = "Cape Reinga";
+            storedAnswers[4][3] = "Whangārei";
+
+            correctAnswer[0] = 3; //defining correct answers for quiz
+            correctAnswer[1] = 3;
+            correctAnswer[2] = 1;
+            correctAnswer[3] = 4;
+            correctAnswer[4] = 1; 
+        }
+
         x = transform.position.x; //accessing starting position
         y = transform.position.y;
         z = transform.position.z;
@@ -150,6 +190,10 @@ public class answers : MonoBehaviour
                     if(PlayerPrefs.GetInt("CurrentBook") == 2) {
                         PlayerPrefs.SetInt("Level2Score", correctAnswers);
                         Debug.Log(PlayerPrefs.GetInt("Level2Score"));
+                    }
+                    if(PlayerPrefs.GetInt("CurrentBook") == 3) {
+                        PlayerPrefs.SetInt("Level3Score", correctAnswers);
+                        Debug.Log(PlayerPrefs.GetInt("Level3Score"));
                     }
                     Renderer.material.mainTexture = correct; //Player gets correct answer, colour changes to green, and correct text appears
                 }
