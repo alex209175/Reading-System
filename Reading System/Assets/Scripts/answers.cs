@@ -6,19 +6,24 @@ using TMPro;
 
 public class answers : MonoBehaviour
 {
+    public movement movementScript; //accessing movement script
+
     public int correctAnswers = 1; //sets number of correct answers to 1 by default so that even if the score is 0, it will show that the student has attempted the task.
     public int frozen = 1; //disable ability for player to move
-    int answeredNum = 0; //variable for the answer that the user selects
+    //int answeredNum = 0; //variable for the answer that the user selects
 
     public TextMeshProUGUI timerText; //accessing the timer object's text
 
-    public GameObject answerText1; //accessing the text objects for the answers
-    public GameObject answerText2;
-    public GameObject answerText3;
-    public GameObject answerText4;
+    public GameObject timerTextObject; //accessing the timer object in order to be able to disable it
 
-    public GameObject timerTextObject; //accessing the timer object
-    int time = 10; //variable for amount of time player has left to answer the question
+    public TextMeshProUGUI answerText1; //accessing the text objects for the answers
+    public TextMeshProUGUI answerText2;
+    public TextMeshProUGUI answerText3;
+    public TextMeshProUGUI answerText4;
+
+    public GameObject[] answeringUIObjects; //accessing the ui objects to be able to disable them
+
+    int time = 20; //variable for amount of time player has left to answer the question
 
     float x; //defining variables for storing the x, y, and z values
     float y;
@@ -83,6 +88,9 @@ public class answers : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        for (int i = 0; i < answeringUIObjects.Length; i++) {
+                answeringUIObjects[i].SetActive(false);
+        }
         if (PlayerPrefs.GetInt("CurrentBook") == 2) {
             questions[0] = "What is the name of the cow in the story?"; //changes questions if on Jack and the Beanstalk
             questions[1] = "The man had a large, curly moustache and was wearing a sparkly yellow ______";
@@ -166,6 +174,7 @@ public class answers : MonoBehaviour
         z = transform.position.z;
         
         QandAtext.text = "Round " + (questionNum + 1).ToString();
+        movementScript.hasReachedAnswer = false;
         timerTextObject.SetActive(false);
         frozen = 1;
         StartCoroutine(wait());
@@ -176,11 +185,12 @@ public class answers : MonoBehaviour
     {
         //Debug.Log(answeredNum);
         timerText.text = time.ToString(); //updating timer text
-        if(time == 0 || Input.GetKeyDown("space") && !usedEnter) {
+        if(movementScript.hasReachedAnswer) {
+            movementScript.hasReachedAnswer = false;
             usedEnter = true;
             frozen = 1; //freeze the character
-            if (answeredNum != 0) {
-                if (answeredNum == correctAnswer[questionNum]) {
+            if (movementScript.answeredQuestion != 0) {
+                if (movementScript.answeredQuestion == correctAnswer[questionNum]) {
                     correctAnswers++; //increments number of correct answers
                     QandAtext.text = "Ka Pai!";
                     if(PlayerPrefs.GetInt("CurrentBook") == 1) {
@@ -195,42 +205,38 @@ public class answers : MonoBehaviour
                         PlayerPrefs.SetInt("Level3Score", correctAnswers);
                         Debug.Log(PlayerPrefs.GetInt("Level3Score"));
                     }
-                    Renderer.material.mainTexture = correct; //Player gets correct answer, colour changes to green, and correct text appears
+                    //Renderer.material.mainTexture = correct; //Player gets correct answer, colour changes to green, and correct text appears
                 }
                 else {
                     QandAtext.text = "The correct answer is " + storedAnswers[questionNum][(correctAnswer[questionNum]) - 1];
-                    Renderer.material.mainTexture = incorrect; //Player gets incorrect answer, colour changes to red, and incorrect text appears
+                    //Renderer.material.mainTexture = incorrect; //Player gets incorrect answer, colour changes to red, and incorrect text appears
                 }
             }
             else {
-                QandAtext.text = "The correct answer is Gate";
+                QandAtext.text = "The correct answer is " + storedAnswers[questionNum][(correctAnswer[questionNum]) - 1];
             }
             StartCoroutine(nextQuestion());
         }
     }
-    void OnTriggerEnter(Collider collider) {
+    /*void OnTriggerEnter(Collider collider) {
         if (collider.gameObject.name == "answer1") {
             answeredNum = 1;
-            Renderer = collider.gameObject.GetComponent<Renderer>();
         }
         if (collider.gameObject.name == "answer2") {
             answeredNum = 2;
-            Renderer = collider.gameObject.GetComponent<Renderer>();
         }
         if (collider.gameObject.name == "answer3") {
             answeredNum = 3;
-            Renderer = collider.gameObject.GetComponent<Renderer>();
         }
         if (collider.gameObject.name == "answer4") {
             answeredNum = 4;
-            Renderer = collider.gameObject.GetComponent<Renderer>();
         }
     }
     void OnTriggerExit(Collider collider) {
         if (collider.gameObject.CompareTag("answer")) {
             answeredNum = 0;
         }
-    }
+    }*/
     IEnumerator timer() {
         while (time != 0 && !usedEnter) {
             yield return new WaitForSeconds(1); //decreasing the time variable unless it is equal to zero
@@ -241,13 +247,16 @@ public class answers : MonoBehaviour
         yield return new WaitForSeconds(2); //wait for two seconds
         freezeNPCs = false;
         usedEnter = false;
-        answerText1.GetComponent<TextMeshPro>().text = storedAnswers[questionNum][0];
-        answerText2.GetComponent<TextMeshPro>().text = storedAnswers[questionNum][1];
-        answerText3.GetComponent<TextMeshPro>().text = storedAnswers[questionNum][2];
-        answerText4.GetComponent<TextMeshPro>().text = storedAnswers[questionNum][3];
+        answerText1.text = storedAnswers[questionNum][0];
+        answerText2.text = storedAnswers[questionNum][1];
+        answerText3.text = storedAnswers[questionNum][2];
+        answerText4.text = storedAnswers[questionNum][3];
         frozen = 0; 
         QandAtext.text = questions[questionNum]; //accessing the question
         timerTextObject.SetActive(true);
+        for (int i = 0; i < answeringUIObjects.Length; i++) {
+                answeringUIObjects[i].SetActive(true);
+        }
         StartCoroutine(timer());
     }
     IEnumerator nextQuestion() {
@@ -255,7 +264,6 @@ public class answers : MonoBehaviour
         time = 10; //resetting the time
         yield return new WaitForSeconds(2); //wait for two seconds
         questionNum++; //incrementing the question number by 1
-        Renderer.material.mainTexture = neutral;
         if (questionNum + 1 > questions.Length) {
             SceneManager.LoadScene(2); //loads learning tree screen once questions are finished
         }
