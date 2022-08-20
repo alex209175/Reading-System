@@ -378,6 +378,7 @@
 "Assets/NavMesh/NavMeshComponents/Scripts/NavMeshSurface.cs"
 "Assets/Scripts/answers.cs"
 "Assets/Scripts/AuthController.cs"
+"Assets/Scripts/bookManager.cs"
 "Assets/Scripts/cameraMotion.cs"
 "Assets/Scripts/FirebaseInit.cs"
 "Assets/Scripts/loadData.cs"

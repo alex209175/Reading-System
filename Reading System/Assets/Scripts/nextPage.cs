@@ -70,7 +70,7 @@ public class nextPage : MonoBehaviour
     
     void NextPg() {
         pageNumber++;
-        if(pageNumber < pageCount - 1 && volIsOn) { //ensures that the audio is not trying to be accessed on the last screen, where there is no audio available
+        if(pageNumber < pageCount && volIsOn) { //ensures that the audio is not trying to be accessed on the last screen, where there is no audio available
             audioSource.clip = audioTexts[pageNumber - 2]; //selects the audio clip, and plays the audio when the next page button is clicked
             audioSource.Play();
         }
@@ -83,7 +83,7 @@ public class nextPage : MonoBehaviour
     }
     void PrevPg() {
         pageNumber--; //subtracts 1 from page number
-        if(pageNumber > 1) { //ensures that the audio is not trying to be accessed on the first screen, where there is no audio available
+        if(pageNumber > 1 && volIsOn) { //ensures that the audio is not trying to be accessed on the first screen, where there is no audio available
             audioSource.clip = audioTexts[pageNumber - 2]; //selects the audio clip, and plays the audio when the next page button is clicked
             audioSource.Play();
         }
