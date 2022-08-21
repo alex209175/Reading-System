@@ -18,6 +18,8 @@ public class loadData : MonoBehaviour
     int lvl2;
     int lvl3;
 
+    private string userID; //unique id for each user
+
 
     DatabaseReference reference; //defining reference to database
     
@@ -50,11 +52,21 @@ public class loadData : MonoBehaviour
             Level3Text.text = ("Te Ika a Māui - not attempted");
         }
 
+        userID = SystemInfo.deviceUniqueIdentifier; //creates a unique user id
         reference = FirebaseDatabase.DefaultInstance.RootReference;
-        FirebaseDatabase.DefaultInstance.GetReference("Level1Score").ValueChanged += HandleUpdateScore;
-        UpdateScore();
+        CreateUser();
+        //FirebaseDatabase.DefaultInstance.GetReference("Level1Score").ValueChanged += HandleUpdateScore;
+        //UpdateScore();
     }
 
+    private void CreateUser() {
+        User newUser = new User(PlayerPrefs.GetString("email"), PlayerPrefs.GetInt("Level1Score"));
+        string json = JsonUtility.ToJson(newUser);
+
+        reference.Child("users").Child("exampleSchool").Child("email").SetRawJsonValueAsync(json);
+    }
+
+/*
     //Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.GetAuth(app);
 
     public void HandleUpdateScore(object sender, ValueChangedEventArgs args) {
@@ -89,7 +101,7 @@ public class loadData : MonoBehaviour
             //Debug.LogFormat("Firebase user created successfully: {0} ({1})",
             //newUser.DisplayName, newUser.UserId);
         //}); 
-        FirebaseDatabase.DefaultInstance.GetReference("Level1Score").GetValueAsync().ContinueWith(task => {
+        /*FirebaseDatabase.DefaultInstance.GetReference("Level1Score").GetValueAsync().ContinueWith(task => {
             if (task.IsFaulted) {
                 Debug.LogError(task);
             }
@@ -137,6 +149,8 @@ public class loadData : MonoBehaviour
     public void nextBook() {
         SceneManager.LoadScene("JackAndTheBeanstalk");
     }
+
+    */
 /*
     private void writeNewUser() {
         string json = JsonUtility.ToJson("test@test.com");

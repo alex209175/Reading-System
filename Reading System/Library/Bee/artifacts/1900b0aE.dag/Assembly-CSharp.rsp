@@ -385,6 +385,7 @@
 "Assets/Scripts/movement.cs"
 "Assets/Scripts/nextPage.cs"
 "Assets/Scripts/npcMotion.cs"
+"Assets/Scripts/User.cs"
 -langversion:9.0
 
 /deterministic
