@@ -324,18 +324,18 @@ MonoBehaviour:
   Level1Text: {fileID: 1371956048}
   Level2Text: {fileID: 2033662126}
   Level3Text: {fileID: 1340851305}
-  PeterRabbit: {fileID: 0}
-  JackBeanstalk: {fileID: 0}
-  Maui: {fileID: 0}
-  PeterRabbitGold: {fileID: 0}
-  PeterRabbitBronze: {fileID: 0}
-  PeterRabbitSilver: {fileID: 0}
-  JackBeanstalkGold: {fileID: 0}
-  JackBeanstalkBronze: {fileID: 0}
-  JackBeanstalkSilver: {fileID: 0}
-  MauiGold: {fileID: 0}
-  MauiBronze: {fileID: 0}
-  MauiSilver: {fileID: 0}
+  PeterRabbit: {fileID: 867012022}
+  JackBeanstalk: {fileID: 1441907968}
+  Maui: {fileID: 1582890968}
+  PeterRabbitGold: {fileID: 21300000, guid: 727d9587d49ff1e41bf86807d432a4ac, type: 3}
+  PeterRabbitBronze: {fileID: 21300000, guid: 04acad0f06c2eb145aeedca142d614a5, type: 3}
+  PeterRabbitSilver: {fileID: 21300000, guid: c3abc5089ea3cfe41ad2e2e9295f8bf3, type: 3}
+  JackBeanstalkGold: {fileID: 21300000, guid: 0f201b0458e9caa41921996520968cdf, type: 3}
+  JackBeanstalkBronze: {fileID: 21300000, guid: 3dcee63076b4f234088f5b0f724ccd62, type: 3}
+  JackBeanstalkSilver: {fileID: 21300000, guid: 97bc0ce33403f5348bb3e89aabaec467, type: 3}
+  MauiGold: {fileID: 21300000, guid: f90c48fc08d6c2e45a1725c17be20cca, type: 3}
+  MauiBronze: {fileID: 21300000, guid: 3ce4177e3ad992d479c06237763cff5a, type: 3}
+  MauiSilver: {fileID: 21300000, guid: 9cac6a63749bf724a9ef98e52779ca96, type: 3}
 --- !u!1 &684525032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1694,6 +1694,7 @@ MonoBehaviour:
   - {fileID: 867012020}
   - {fileID: 1441907966}
   - {fileID: 1582890966}
+  blankScreen: {fileID: 0}
 --- !u!1 &1582890966
 GameObject:
   m_ObjectHideFlags: 0

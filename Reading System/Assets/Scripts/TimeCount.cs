@@ -47,14 +47,14 @@ public class TimeCount : MonoBehaviour
     }
 
     void Update() {
-        Debug.Log("Count Wait Period = " + countWaitPeriod);
+        //Debug.Log("Count Wait Period = " + countWaitPeriod);
         /*Debug.Log("HasRunOnce = " + hasRunOnce);
         Debug.Log("Display Wait on Scene Load = " + displayWaitOnSceneLoad);*/
 
         if (SceneManager.GetActiveScene().name != "LearningTree") {
             hasRunOnce = false;
         }
-        if (seconds > 19 && canCount && SceneManager.GetActiveScene().name != "LearningTree") { 
+        if (seconds > 1990 && canCount && SceneManager.GetActiveScene().name != "LearningTree") { 
             displayWaitOnSceneLoad = true;
             //DisplayWaitScreen();
             canCount = false;
@@ -69,14 +69,14 @@ public class TimeCount : MonoBehaviour
         }*/
         if (displayWaitOnSceneLoad && SceneManager.GetActiveScene().name == "LearningTree" && !hasRunOnce) {
             //Debug.Log("HasRunOnce = " + hasRunOnce);
-            Debug.Log("First Condition True");
+            //Debug.Log("First Condition True");
             hasRunOnce = true;
             blankScreen = GameObject.Find("BlankScreen");
             waitScreenElements = GameObject.Find("Wait");
             Buttons[0] = GameObject.Find("PeterRabbit");
             Buttons[1] = GameObject.Find("JackBeanstalk");
             Buttons[2] = GameObject.Find("Maui");
-            Debug.Log("Display");
+            //Debug.Log("Display");
             blankScreen.SetActive(false);
             displayWaitOnSceneLoad = false;
             waitScreenElements.SetActive(true);
@@ -101,7 +101,7 @@ public class TimeCount : MonoBehaviour
                 Buttons[i].SetActive(true);
             }
         }
-        if (waitPeriodSeconds > 9) {
+        if (waitPeriodSeconds > 19) {
             countWaitPeriod = false;
             /*blankScreen = GameObject.Find("BlankScreen");
             waitScreenElements = GameObject.Find("Wait");

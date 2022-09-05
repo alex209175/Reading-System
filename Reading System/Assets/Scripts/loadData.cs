@@ -14,23 +14,23 @@ public class loadData : MonoBehaviour
     public TextMeshProUGUI Level2Text;
     public TextMeshProUGUI Level3Text;
 
-    public RawImage PeterRabbit;
-    public RawImage JackBeanstalk;
-    public RawImage Maui;
+    public Button PeterRabbit;
+    public Button JackBeanstalk;
+    public Button Maui;
 
-    public Texture PeterRabbitGold;
-    public Texture PeterRabbitBronze;
-    public Texture PeterRabbitSilver;
+    public Sprite PeterRabbitGold;
+    public Sprite PeterRabbitBronze;
+    public Sprite PeterRabbitSilver;
 
-    public Texture JackBeanstalkGold;
-    public Texture JackBeanstalkBronze;
-    public Texture JackBeanstalkSilver;
+    public Sprite JackBeanstalkGold;
+    public Sprite JackBeanstalkBronze;
+    public Sprite JackBeanstalkSilver;
 
-    public Texture MauiGold;
-    public Texture MauiBronze;
-    public Texture MauiSilver;
+    public Sprite MauiGold;
+    public Sprite MauiBronze;
+    public Sprite MauiSilver;
 
-
+    //public Image image;
 
     int lvl1;
     int lvl2;
@@ -48,33 +48,46 @@ public class loadData : MonoBehaviour
     {
         lvl1 = PlayerPrefs.GetInt("Level1Score");
 
-        /*if (4 > lvl1 > 0) {
-            PeterRabbit.texture = PeterRabbitBronze;
+        if (4 > lvl1 && lvl1 > 0) {
+            PeterRabbit.GetComponent<Image>().sprite = PeterRabbitBronze;
         }
         if (lvl1 == 4) {
-            PeterRabbit.texture = PeterRabbitSilver;
+            PeterRabbit.GetComponent<Image>().sprite = PeterRabbitSilver;
         }
         if (lvl1 > 4) {
-            PeterRabbit.texture = PeterRabbitGold;
-        }*/
+            PeterRabbit.GetComponent<Image>().sprite = PeterRabbitGold;
+        }
 
         lvl2 = PlayerPrefs.GetInt("Level2Score");
 
-        if (lvl2 > 0) {
-            Level2Text.text = ("Jack and the Beanstalk - " + ((lvl2 - 1).ToString()) + "/5");
+        if (4 > lvl2 && lvl2 > 0) {
+            JackBeanstalk.GetComponent<Image>().sprite = JackBeanstalkBronze;
         }
-        else {
-            Level2Text.text = ("Jack and the Beanstalk - not attempted");
+        if (lvl2 == 4) {
+            JackBeanstalk.GetComponent<Image>().sprite = JackBeanstalkSilver;
+        }
+        if (lvl2 > 4) {
+            JackBeanstalk.GetComponent<Image>().sprite = JackBeanstalkGold;
+        }
+        if (lvl2 < 1 && lvl1 < 1) {
+            JackBeanstalk.GetComponent<Image>().color = new Color32(0, 0, 0, 150); // Decreases opacity
         }
 
         lvl3 = PlayerPrefs.GetInt("Level3Score");
 
-        if (lvl3 > 0) {
-            Level3Text.text = ("Te Ika a Māui - " + ((lvl3 - 1).ToString()) + "/5");
+        if (4 > lvl3 && lvl3 > 0) {
+            Maui.GetComponent<Image>().sprite = MauiBronze;
         }
-        else {
-            Level3Text.text = ("Te Ika a Māui - not attempted");
+        if (lvl3 == 4) {
+            Maui.GetComponent<Image>().sprite = MauiSilver;
         }
+        if (lvl3 > 4) {
+            Maui.GetComponent<Image>().sprite = MauiGold;
+        }
+        if (lvl3 < 1 && lvl1 < 1) {
+            Maui.GetComponent<Image>().color = new Color32(0, 0, 0, 150); // Decreases opacity
+        }
+
         username = PlayerPrefs.GetString("username");
         email = PlayerPrefs.GetString("email");
         userID = SystemInfo.deviceUniqueIdentifier; //creates a unique user id
