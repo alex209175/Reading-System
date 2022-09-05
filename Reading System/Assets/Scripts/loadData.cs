@@ -14,11 +14,32 @@ public class loadData : MonoBehaviour
     public TextMeshProUGUI Level2Text;
     public TextMeshProUGUI Level3Text;
 
+    public RawImage PeterRabbit;
+    public RawImage JackBeanstalk;
+    public RawImage Maui;
+
+    public Texture PeterRabbitGold;
+    public Texture PeterRabbitBronze;
+    public Texture PeterRabbitSilver;
+
+    public Texture JackBeanstalkGold;
+    public Texture JackBeanstalkBronze;
+    public Texture JackBeanstalkSilver;
+
+    public Texture MauiGold;
+    public Texture MauiBronze;
+    public Texture MauiSilver;
+
+
+
     int lvl1;
     int lvl2;
     int lvl3;
 
     private string userID; //unique id for each user
+
+    private string username;
+    private string email;
 
 
     DatabaseReference reference; //defining reference to database
@@ -27,12 +48,15 @@ public class loadData : MonoBehaviour
     {
         lvl1 = PlayerPrefs.GetInt("Level1Score");
 
-        if (lvl1 > 0) {
-            Level1Text.text = ("Peter Rabbit - " + ((lvl1 - 1).ToString()) + "/5"); //if the task is attempted, it will display the score
+        /*if (4 > lvl1 > 0) {
+            PeterRabbit.texture = PeterRabbitBronze;
         }
-        else {
-            Level1Text.text = ("Peter Rabbit - not attempted"); //if not, shows not attempted
+        if (lvl1 == 4) {
+            PeterRabbit.texture = PeterRabbitSilver;
         }
+        if (lvl1 > 4) {
+            PeterRabbit.texture = PeterRabbitGold;
+        }*/
 
         lvl2 = PlayerPrefs.GetInt("Level2Score");
 
@@ -51,7 +75,8 @@ public class loadData : MonoBehaviour
         else {
             Level3Text.text = ("Te Ika a Māui - not attempted");
         }
-
+        username = PlayerPrefs.GetString("username");
+        email = PlayerPrefs.GetString("email");
         userID = SystemInfo.deviceUniqueIdentifier; //creates a unique user id
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         CreateUser();
@@ -60,10 +85,13 @@ public class loadData : MonoBehaviour
     }
 
     private void CreateUser() {
-        User newUser = new User(PlayerPrefs.GetString("email"), PlayerPrefs.GetInt("Level1Score"));
+        User newUser = new User(PlayerPrefs.GetInt("Level1Score"), PlayerPrefs.GetInt("Level2Score"), PlayerPrefs.GetInt("Level3Score"));
         string json = JsonUtility.ToJson(newUser);
-
-        reference.Child("users").Child("exampleSchool").Child("email").SetRawJsonValueAsync(json);
+        //Debug.Log(json);
+        //Debug.Log(PlayerPrefs.GetString("username"));
+        Debug.Log(username);
+        reference.Child("users").Child(PlayerPrefs.GetString("class")).Child(username).SetRawJsonValueAsync(json);
+        //reference.Child("users").Child("exampleSchool").Child(PlayerPrefs.GetString("username")).SetRawJsonValueAsync(json);
     }
 
 /*
