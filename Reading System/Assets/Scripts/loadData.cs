@@ -103,7 +103,7 @@ public class loadData : MonoBehaviour
         //Debug.Log(json);
         //Debug.Log(PlayerPrefs.GetString("username"));
         Debug.Log(username);
-        reference.Child("users").Child(PlayerPrefs.GetString("class")).Child(username).SetRawJsonValueAsync(json);
+        reference.Child("classes").Child(PlayerPrefs.GetString("class")).Child(username).SetRawJsonValueAsync(json);
         //reference.Child("users").Child("exampleSchool").Child(PlayerPrefs.GetString("username")).SetRawJsonValueAsync(json);
     }
 

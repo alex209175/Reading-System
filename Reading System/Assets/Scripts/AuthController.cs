@@ -9,11 +9,21 @@ using Firebase;
 
 public class AuthController : MonoBehaviour
 {
-    bool verified = false;
+    bool verified = false; //boolean for if the username and password have been verified
+    bool classVerified = false; //boolean for if the class code has been verified
+    bool hasFailed = false; //boolean for if the username or password was incorrect
+    bool usernameExists = false; //boolean to ensure that the username does not already exist
+    bool usernameAllowed = false; //boolean to move to the next scene if username is approved
+
     public TMP_InputField emailInput;
     public TMP_InputField classInput;
     public TMP_InputField usernameInput;
     public TMP_InputField passwordInput; //accessing username, email, class and password input fields
+
+    public TextMeshProUGUI instructions; //accesing instructional text
+
+    public GameObject[] firstInputs; //accessing the input fields as game objects in order to be able to show and hide them
+    public GameObject usernameInputField;
     
     public void Login() {
         //SceneManager.LoadScene(0);
@@ -36,25 +46,54 @@ public class AuthController : MonoBehaviour
             }*/
 
         //});
-        FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(emailInput.text, passwordInput.text).ContinueWith(( task => {
-            Debug.Log("test");
-            if(task.IsCanceled) {
-                Debug.Log("cancelled");
-                return;
+
+        if (!verified) {
+            if (hasFailed) {
+                //hasFailed = false; //will set has failed to false by default
             }
-            if(task.IsFaulted) {
-                Debug.Log("faulted");
-                Firebase.FirebaseException e = task.Exception.Flatten().InnerExceptions[0] as Firebase.FirebaseException;
-                GetErrorMessage((AuthError)e.ErrorCode);
-                return;
+            FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(emailInput.text, passwordInput.text).ContinueWith(( task => {
+                Debug.Log("test");
+                if(task.IsCanceled) {
+                    Debug.Log("cancelled");
+                    return;
+                }
+                if(task.IsFaulted) {
+                    hasFailed = true;
+                    //instructions.text = "Class Code is incorrect. Please try again, or ask your teacher for help.";
+                    Debug.Log("faulted");
+                    Firebase.FirebaseException e = task.Exception.Flatten().InnerExceptions[0] as Firebase.FirebaseException;
+                    GetErrorMessage((AuthError)e.ErrorCode);
+                    return;
+                }
+                if(task.IsCompleted) {
+                    verified = true;
+                    /*PlayerPrefs.SetString("email", emailInput.text); //saves email locally
+                    Debug.Log(PlayerPrefs.GetString("email"));*/
+                    //StartCoroutine(loadLevel());
+                }
+            }));
+        }
+        if (classVerified) {
+                FirebaseDatabase.DefaultInstance.RootReference.Child("classes").Child(classInput.text).GetValueAsync().ContinueWith(t => {
+                    if (t.IsCanceled) {
+                        return;
+                    }
+                    if (t.IsFaulted) {
+                        return;
+                    }
+                    DataSnapshot snapshot = t.Result;
+                    if (snapshot.HasChild(usernameInput.text)) {
+                        usernameExists = true;
+                        Debug.Log("Username Already Exists");
+                    }
+                    else {
+                        Debug.Log("Username accepted");
+                        usernameAllowed = true;
+                        /*instructions.text = "Class Code is incorrect. Please try again, or ask your teacher for help.";
+                        classVerified = false;*/
+                    }
+                });
             }
-            if(task.IsCompleted) {
-                verified = true;
-                /*PlayerPrefs.SetString("email", emailInput.text); //saves email locally
-                Debug.Log(PlayerPrefs.GetString("email"));*/
-                //StartCoroutine(loadLevel());
-            }
-        }));
     }
 
     /*void LoadMenu() {
@@ -64,17 +103,73 @@ public class AuthController : MonoBehaviour
     }*/
     
     void GetErrorMessage(AuthError errorCode) {
+        instructions.text = "Email or Password is incorrect. Please try again, or ask your teacher for help.";
         string msg = "";
         msg = errorCode.ToString();
         print(msg);
     }
 
     void Update() {
-        if(verified) {
-            PlayerPrefs.SetString("username", usernameInput.text);
+        Debug.Log(usernameExists);
+        if (hasFailed) {
+            instructions.text = "Email or Password is incorrect. Please try again, or ask your teacher for help.";
+        }
+
+        if(verified && classVerified) {
+            /*DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference(classInput.text);
+            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        
+
+                    } else {
+                        
+
+                    }
+                }
+
+            });*/
+            for (int i=0; i<firstInputs.Length; i++) {
+                firstInputs[i].SetActive(false);
+            }
+            usernameInputField.SetActive(true);
+            instructions.text = "Please create a username";
             PlayerPrefs.SetString("email", emailInput.text);
             PlayerPrefs.SetString("class", classInput.text);
+        }
+
+        if (usernameExists) {
+            instructions.text = "Username already exists in this class.";
+        }
+        if (usernameAllowed) {
+            PlayerPrefs.SetString("username", usernameInput.text);
             SceneManager.LoadScene(2);
+        }
+
+        if (verified) {
+            Debug.Log("verified");
+            if (!classVerified) {
+                FirebaseDatabase.DefaultInstance.RootReference.Child("classes").GetValueAsync().ContinueWith(t => {
+                    if (t.IsCanceled) {
+                        return;
+                    }
+                    if (t.IsFaulted) {
+                        return;
+                    }
+                    DataSnapshot snapshot = t.Result;
+                    if (snapshot.HasChild(classInput.text)) {
+                        Debug.Log("success!");
+                        classVerified = true;
+                    }
+                    else {
+                        Debug.Log("failure");
+                        instructions.text = "Class Code is incorrect. Please try again, or ask your teacher for help.";
+                        classVerified = false;
+                    }
+                });
+            }
         }
     }
 }
