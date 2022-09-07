@@ -380,11 +380,13 @@
 "Assets/Scripts/AuthController.cs"
 "Assets/Scripts/bookManager.cs"
 "Assets/Scripts/cameraMotion.cs"
+"Assets/Scripts/createClass.cs"
 "Assets/Scripts/FirebaseInit.cs"
 "Assets/Scripts/loadData.cs"
 "Assets/Scripts/movement.cs"
 "Assets/Scripts/nextPage.cs"
 "Assets/Scripts/npcMotion.cs"
+"Assets/Scripts/resultGatherer.cs"
 "Assets/Scripts/TimeCount.cs"
 "Assets/Scripts/User.cs"
 -langversion:9.0
