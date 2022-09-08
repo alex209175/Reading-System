@@ -1510,6 +1510,7 @@ MonoBehaviour:
   - {fileID: 1884106884}
   userList: {fileID: 1770571597}
   passwordList: {fileID: 1323171995}
+  initialCreateText: {fileID: 1371956048}
   classCodeText: {fileID: 87592445}
 --- !u!1 &963194225
 GameObject:
@@ -3719,7 +3720,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -283.793}
+  m_AnchoredPosition: {x: 0, y: -333}
   m_SizeDelta: {x: -201.8404, y: 376.41}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1884106886
