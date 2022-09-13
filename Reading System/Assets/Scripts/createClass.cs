@@ -42,8 +42,17 @@ public class createClass : MonoBehaviour
     bool valid = true; //boolean for if email address is valid
     bool hasInvalidEmailAddresses = false; //boolean for determining if there are invalid email addresses
 
+    bool hasTestedEmail = false; //boolean to ensure that the email address has been tested by firebase before moving on
+
+    bool hasTestedAllEmails = false; //boolean to ensure that all email addresses has been tested by firebase before moving on
+
+    bool hasRunDisplayOnce = false; //ensures that it doesn't loop through list
+
+
     public TextMeshProUGUI classCodeText; //accessing text to display the class code
     string classCode; //stores class code
+
+    int numTestedEmails = 0; //integer to ensure that the next screen does not display until all email addresses have been tested
 
     DatabaseReference reference; //database reference
 
@@ -83,6 +92,9 @@ public class createClass : MonoBehaviour
     IEnumerator waitForAcceptedClassCode() {
         while (!hasAcceptedClassCode) {
             for(int i=0; i<10; i++) {
+                if (i == 0 && classCode != null) {
+                    classCode = "";                         //clears class code if run again
+                }
                 randomCharSelector = Random.Range(0, 62); //generates random character
                 classCode = classCode + validCodeChars[randomCharSelector]; //adds new character on to class code
             }
@@ -119,79 +131,229 @@ public class createClass : MonoBehaviour
                 catch
                 {
                     valid = false;
+                    Debug.Log("Not Valid");
+                    hasInvalidEmailAddresses = true;
+                    numTestedEmails++;
                 }
                 if (valid) {
-                    Debug.Log(separatedAddresses[i] + " is valid");
                     generatedChars = ""; //clears generated characters for each new password
                     for(int a=0; a<5; a++) {
                         randomCharSelector = Random.Range(0, validCodeChars.Length); //generates random character
                         generatedChars = generatedChars + validCodeChars[randomCharSelector]; //adds new character on to generated password
                     }
+
                     passwords[i] = separatedAddresses[i].Substring(0, 5) + generatedChars; //gets first 5 characters of email address to use as start of password and adds random characters at end
                     Debug.Log(passwords[i]);
                     FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(separatedAddresses[i], passwords[i]).ContinueWith (task => { //cycles through email address list and creates user with generated password
                         if (task.IsCanceled) {
                             Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled."); //task is cancelled
+                            valid = false;
+                            hasTestedEmail = true;
                             return;
                         }
                         if (task.IsFaulted) {
                             Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception); //task faulted
+                            valid = false; //set user not to be valid
+                            hasTestedEmail = true;
                             return;
                         }
 
                         Firebase.Auth.FirebaseUser newUser = task.Result;
                         Debug.LogFormat("Firebase user created successfully: {0} ({1})", //task successful
                             newUser.DisplayName, newUser.UserId);
+                        hasTestedEmail = true;
+                        numTestedEmails++;
+                        if (numTestedEmails == separatedAddresses.Length/* && !hasInvalidEmailAddresses*/) {
+                            Debug.Log("RUN");
+                            hasTestedAllEmails = true;
+                        }
+                        //Debug.Log(numTestedEmails + " " + separatedAddresses.Length);
                     });
-
-                    validPasswords.Add(passwords[i]); //adds password to list
-                    validAddresses.Add(separatedAddresses[i]); //adds valid email address to list
-                    hasRunOnce = true; //ensures that the code does not loop
                 }
-                else {
+                if (!valid && numTestedEmails == separatedAddresses.Length) {
                     hasInvalidEmailAddresses = true;
                     Debug.Log(separatedAddresses[i] + " is not valid");
                     invalidAddresses.Add(separatedAddresses[i]);
                     Debug.Log("Invalid Email Address");
-                    classCodeText.text = "One or more email addresses are invalid or already taken";
-                    hasRunOnce = true; //ensures that the code does not loop
-                    DisplayInvalidEmails(); //displays the invalid email addresses
+                    //classCodeText.text = "One or more email addresses are invalid or already taken";
+                    //DisplayInvalidEmails(); //displays the invalid email addresses
                 }
+                hasRunOnce = true; //ensures that the code does not loop
             }
+            /*if (numTestedEmails < separatedAddresses.Length) {
+                classCodeText.text = "One or more email addresses are invalid or already taken";
+                for(int i=0; i<invalidAddresses.Count; i++) {
+                    if (i == 0) {
+                        userList.text = "Users\n" + invalidAddresses[i];
+                        passwordList.text = "";
+                    }
+                    else {
+                        userList.text = userList.text + "\n" + invalidAddresses[i];
+                        Debug.Log(invalidAddresses[i]);
+                    }
+                }
+            }*/
 
-            for (int i=0; i<validAddresses.Count; i++) {
+            /*for (int i=0; i<validAddresses.Count; i++) {
                 validAddressesPlayerPrefs = validAddressesPlayerPrefs + "\n" + validAddresses[i]; //stores list in a string
                 validPasswordsPlayerPrefs = validPasswordsPlayerPrefs + "\n" + validPasswords[i];
-            }
+            }*/
 
-            if (!hasInvalidEmailAddresses) {
+            /*if (/*!hasInvalidEmailAddresses && *//*numTestedEmails == separatedAddresses.Length) {
+                Debug.Log("show");
                 classCodeText.text = "Class Code: " + classCode; //sets class code text
                 for (int i=0; i<validAddresses.Count; i++) {
-                    userList.text = userList.text + "\n" + validAddresses[i]; //adds email addresses to UI list if no email addresses are invalid
+                    if (i == 0) {
+                        userList.text = "Users\n" + validAddresses[i]; //sets first address
+                        validPasswordsPlayerPrefs = validPasswords[i];
+                    }
+                    else {
+                        userList.text = userList.text + "\n" + validAddresses[i]; //adds email addresses to UI list if no email addresses are invalid
+                        validPasswordsPlayerPrefs = validPasswordsPlayerPrefs + "\n" + validPasswords[i];
+                    }
+                    validAddressesPlayerPrefs = userList.text;
                 }
                 passwordList.text = "Passwords\n" + validPasswordsPlayerPrefs; //creates UI password list
+            }*/
+
+            /*if (hasTestedEmail) {
+                PlayerPrefs.SetString("emails", validAddressesPlayerPrefs); //saves emails locally
+                PlayerPrefs.SetString("passwords", validPasswordsPlayerPrefs); //saves passwords locally
+                PlayerPrefs.SetString("class", classCode); //sets up basic account details
+                PlayerPrefs.SetString("username", "Teacher");
+                PlayerPrefs.SetInt("Level1Score", 0);
+                PlayerPrefs.SetInt("Level2Score", 0);
+                PlayerPrefs.SetInt("Level3Score", 0);
+
+                for (int i=0; i<firstElements.Length; i++) {
+                    firstElements[i].SetActive(false); //hides first UI elements on screen
+                }
+                for (int i=0; i<secondElements.Length; i++) {
+                    secondElements[i].SetActive(true); //displays second UI elements on screen
+                }
+
+                isCreateNewClass = false;
+
+                Debug.Log(PlayerPrefs.GetString("emails"));
+                Debug.Log(PlayerPrefs.GetString("passwords"));
+            }*/
+        }
+        if (hasTestedAllEmails && !hasRunDisplayOnce) {
+            if (hasInvalidEmailAddresses) {
+                classCodeText.text = "One or more email addresses are invalid or already taken";
+                for(int i=0; i<invalidAddresses.Count; i++) {
+                    if (i == 0) {
+                        userList.text = "Users\n" + invalidAddresses[i];
+                        passwordList.text = "";
+                    }
+                    else {
+                        userList.text = userList.text + "\n" + invalidAddresses[i];
+                        Debug.Log(invalidAddresses[i]);
+                    }
+                }
             }
+            else {
+                for(int i=0; i<separatedAddresses.Length; i++) {
+                validPasswords.Add(passwords[i]); //adds password to list
+                validAddresses.Add(separatedAddresses[i]); //adds valid email address to list
+                Debug.Log(separatedAddresses[i] + " is valid");
+                }
 
-            PlayerPrefs.SetString("emails", validAddressesPlayerPrefs); //saves emails locally
-            PlayerPrefs.SetString("passwords", validPasswordsPlayerPrefs); //saves passwords locally
-            PlayerPrefs.SetString("class", classCode); //sets up basic account details
-            PlayerPrefs.SetString("username", "Teacher");
-            PlayerPrefs.SetInt("Level1Score", 0);
-            PlayerPrefs.SetInt("Level2Score", 0);
-            PlayerPrefs.SetInt("Level3Score", 0);
+                classCodeText.text = "Class Code: " + classCode; //sets class code text
+                Debug.Log("NEXT");
+                Debug.Log("Num Valid Addresses " + validAddresses.Count);
+                for (int i=0; i<validAddresses.Count; i++) {
+                    if (i == 0) {
+                        Debug.Log("2");
+                        userList.text = "Users\n" + validAddresses[i]; //sets first address
+                        validPasswordsPlayerPrefs = validPasswords[i];
+                    }
+                    else {
+                        Debug.Log("3");
+                        userList.text = userList.text + "\n" + validAddresses[i]; //adds email addresses to UI list if no email addresses are invalid
+                        validPasswordsPlayerPrefs = validPasswordsPlayerPrefs + "\n" + validPasswords[i];
+                    }
+                    Debug.Log("4");
+                    validAddressesPlayerPrefs = userList.text;
+                }
+                Debug.Log("5");
+                passwordList.text = "Passwords\n" + validPasswordsPlayerPrefs; //creates UI password list
 
+                Debug.Log("6");
+                PlayerPrefs.SetString("emails", validAddressesPlayerPrefs); //saves emails locally
+                PlayerPrefs.SetString("passwords", validPasswordsPlayerPrefs); //saves passwords locally
+                PlayerPrefs.SetString("class", classCode); //sets up basic account details
+                PlayerPrefs.SetString("username", "Teacher");
+                PlayerPrefs.SetInt("Level1Score", 0);
+                PlayerPrefs.SetInt("Level2Score", 0);
+                PlayerPrefs.SetInt("Level3Score", 0);
+                Debug.Log("7");
+
+                isCreateNewClass = false;
+
+                Debug.Log(PlayerPrefs.GetString("emails"));
+                Debug.Log(PlayerPrefs.GetString("passwords"));
+            }
             for (int i=0; i<firstElements.Length; i++) {
+                Debug.Log("8");
                 firstElements[i].SetActive(false); //hides first UI elements on screen
             }
             for (int i=0; i<secondElements.Length; i++) {
+                Debug.Log("9");
                 secondElements[i].SetActive(true); //displays second UI elements on screen
             }
 
-            isCreateNewClass = false;
-
-            Debug.Log(PlayerPrefs.GetString("emails"));
-            Debug.Log(PlayerPrefs.GetString("passwords"));
+            hasRunDisplayOnce = true; //prevents code from looping
         }
+    }
+
+    void DisplayValidEmails() {
+        Debug.Log("1");
+        Debug.Log("2");
+        Debug.Log("3");
+
+        /*classCodeText.text = "Class Code: " + classCode; //sets class code text
+        Debug.Log("NEXT");
+        for (int i=0; i<validAddresses.Count; i++) {
+            if (i == 0) {
+                Debug.Log("2");
+                userList.text = "Users\n" + validAddresses[i]; //sets first address
+                validPasswordsPlayerPrefs = validPasswords[i];
+            }
+            else {
+                Debug.Log("3");
+                userList.text = userList.text + "\n" + validAddresses[i]; //adds email addresses to UI list if no email addresses are invalid
+                validPasswordsPlayerPrefs = validPasswordsPlayerPrefs + "\n" + validPasswords[i];
+            }
+            Debug.Log("4");
+            validAddressesPlayerPrefs = userList.text;
+        }
+        Debug.Log("5");
+        passwordList.text = "Passwords\n" + validPasswordsPlayerPrefs; //creates UI password list
+
+        Debug.Log("6");
+        PlayerPrefs.SetString("emails", validAddressesPlayerPrefs); //saves emails locally
+        PlayerPrefs.SetString("passwords", validPasswordsPlayerPrefs); //saves passwords locally
+        PlayerPrefs.SetString("class", classCode); //sets up basic account details
+        PlayerPrefs.SetString("username", "Teacher");
+        PlayerPrefs.SetInt("Level1Score", 0);
+        PlayerPrefs.SetInt("Level2Score", 0);
+        PlayerPrefs.SetInt("Level3Score", 0);
+        Debug.Log("7");
+        for (int i=0; i<firstElements.Length; i++) {
+            Debug.Log("8");
+            firstElements[i].SetActive(false); //hides first UI elements on screen
+        }
+        for (int i=0; i<secondElements.Length; i++) {
+            Debug.Log("9");
+            secondElements[i].SetActive(true); //displays second UI elements on screen
+        }
+
+        isCreateNewClass = false;
+
+        Debug.Log(PlayerPrefs.GetString("emails"));
+        Debug.Log(PlayerPrefs.GetString("passwords"));
+        */
     }
     
     void DisplayInvalidEmails() {
