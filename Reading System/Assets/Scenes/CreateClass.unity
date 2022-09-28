@@ -1497,7 +1497,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 910138731}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dcdb72dcac03204fb38eb146472696a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0c0b9afd3ef943e4fba9552219776464, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   emailInputField: {fileID: 1618105330}
@@ -1505,13 +1505,10 @@ MonoBehaviour:
   - {fileID: 1371956046}
   - {fileID: 1618105328}
   - {fileID: 292096289}
+  - {fileID: 1467525738}
   secondElements:
   - {fileID: 87592443}
   - {fileID: 1884106884}
-  userList: {fileID: 1770571597}
-  passwordList: {fileID: 1323171995}
-  initialCreateText: {fileID: 1371956048}
-  classCodeText: {fileID: 87592445}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -2763,8 +2760,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 910138733}
-        m_TargetAssemblyTypeName: createClass, Assembly-CSharp
-        m_MethodName: NewClass
+        m_TargetAssemblyTypeName: createClass_new, Assembly-CSharp
+        m_MethodName: createClassWithEmailAddresses
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
