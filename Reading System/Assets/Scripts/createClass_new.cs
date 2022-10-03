@@ -16,7 +16,9 @@ public class createClass_new : MonoBehaviour
     public GameObject[] firstElements; //will show and hide the first and second UI elements as necessary
     public GameObject[] secondElements;
 
-    string[] emailAddresses; //stores email addresses in the array
+    string[] emailAddresses; //stores email addresses
+    string[] emailAddressesIndex; //stores current address index
+
     int numTestedAddresses = 0; //will count the number of processed email addresses
 
     string validCharacters; //stores all valid characters which can be used to form the class code, as well as user passwords
@@ -31,12 +33,9 @@ public class createClass_new : MonoBehaviour
     bool classCodeExists = false; //will regenerate class code if it exists
 
     bool hasGeneratedUserAccounts = false; //ensures that the code doesn't loop
+    bool isInvalid = false;
 
-    bool addressIsFaulted = false; //detects whether the email address is invalid
-
-    string savedAddress = ""; //saves the email address to show if invalid
-
-    List<string> invalidAddresses = new List<string>(); //stores the invalid email addresses to display
+    //bool addressIsFaulted = false; //detects whether the email address is invalid
 
     string[] userPassword; //creates user password
 
@@ -45,11 +44,19 @@ public class createClass_new : MonoBehaviour
     }
 
     void Update () {
+        //Debug.Log(numTestedAddresses);
+        if (isInvalid) {
+            Debug.Log(emailAddresses[numTestedAddresses - 1] + " is invalid");
+            isInvalid = false;
+        }
+
         if (classCodeExists) {
             verifyCode(); //attempts to reverify the code
         }
         if (!classCodeExists && verifiedCode && !hasGeneratedUserAccounts) {
-            emailAddresses = emailInputField.text.Split("\n"); //separates email addresses by line ending
+            emailAddresses = emailInputField.text.Split("\n");
+            int[] emailAddressesIndex = new int[emailInputField.text.Split("\n").Length]; //separates email addresses by line ending
+            
             for (int i=0; i<emailAddresses.Length; i++) {
                 string[] userPassword = new string[emailAddresses.Length];
                 /*if (i == 0 && userPassword[i] != null) {
@@ -62,7 +69,8 @@ public class createClass_new : MonoBehaviour
                 }
                 Debug.Log(userPassword[i]);
                 hasGeneratedUserAccounts = true; //ensures that the code does not loop
-                savedAddress = emailAddresses[i]; //stores the address and displays it if the email address is invalid
+                emailAddressesIndex[i] = i;
+
                 FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(emailAddresses[i], userPassword[i]).ContinueWith (task => {
                     if (task.IsCanceled) {
                         Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
@@ -70,12 +78,15 @@ public class createClass_new : MonoBehaviour
                     }
                     if (task.IsFaulted) {
                         Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
-                        addressIsFaulted = true; //email address is invalid
-                        numTestedAddresses++;
+                        //addressIsFaulted = true; //email address is invalid
+                        numTestedAddresses++;                           //ONLY SAVE NUM, DON'T SAVE ADDRESS
+                        isInvalid = true;
+                        Debug.Log(numTestedAddresses);
                         return;
                     }
 
                     numTestedAddresses++;
+                    i++;
 
                     Firebase.Auth.FirebaseUser newUser = task.Result;
                     Debug.LogFormat("Firebase user created successfully: {0} ({1})", //task successful
@@ -89,24 +100,16 @@ public class createClass_new : MonoBehaviour
                 firstElements[i].SetActive(false);
             }*/
         }
-        if (addressIsFaulted) {
+
+        /*if (addressIsFaulted) {
             Debug.Log("Email address " + savedAddress + " is invalid");
             invalidAddresses.Add(savedAddress); //saves the invalid email address to the list
             addressIsFaulted = false; //ensures code does not loop
-        }
+        }*/
 
-        if (numTestedAddresses == emailInputField.text.Split("\n").Length) {
-            if (invalidAddresses.Count > 0) {
-                for (int i=0; i<invalidAddresses.Count; i++) {
-                    if (i == 0) {
-                        emailInputField.text = ""; //clears email input field for first loop
-                    }
-                    else {
-                        emailInputField.text = emailInputField.text + invalidAddresses[i] + "\n"; //adds items to email input field
-                    }
-                }
-            }
-        }
+        /*if (numTestedAddresses == emailInputField.text.Split("\n").Length) {
+            Debug.Log("Complete");
+        }*/
     }
 
     public void createClassWithEmailAddresses() { //Button click will activate
