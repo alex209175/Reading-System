@@ -11,15 +11,30 @@ using TMPro;
 
 public class createClass_new : MonoBehaviour
 {
+    DatabaseReference reference; //defining reference to database
+    
+    //First Elements
     public TMP_InputField emailInputField; //accesssing the email input field
+    public TextMeshProUGUI mainText; //accessing the main text element
+
+    //Second Elements
+    public TextMeshProUGUI classCodeText; //accessing the class code text
+    public TextMeshProUGUI userList; //accessing the text to display the user list
+    public TextMeshProUGUI passwordList; //accessing the text to display the password list
 
     public GameObject[] firstElements; //will show and hide the first and second UI elements as necessary
     public GameObject[] secondElements;
 
-    string[] emailAddresses; //stores email addresses
-    string[] emailAddressesIndex; //stores current address index
+    List<string> emailAddresses = new List<string>(); //stores email addresses
+    List<string> invalidAddresses = new List<string>(); //stores all invalid addresses
+
+    List<string> userUID = new List<string>();
+
+    string emailListPlayerPrefs = ""; //stores username and password in form which can be used by player prefs
+    string passwordListPlayerPrefs = "";
 
     int numTestedAddresses = 0; //will count the number of processed email addresses
+    int prevNum = 0; //prev num is numTestedAddresses from previous loop in Update()
 
     string validCharacters; //stores all valid characters which can be used to form the class code, as well as user passwords
     int randNumGenerator; //will generate a random number per each character in class code or user password
@@ -28,48 +43,64 @@ public class createClass_new : MonoBehaviour
 
     bool verifiedCode = false;
 
-    bool hasRunOnce = false; //ensures that code doesn't loop
-
     bool classCodeExists = false; //will regenerate class code if it exists
 
     bool hasGeneratedUserAccounts = false; //ensures that the code doesn't loop
     bool isInvalid = false;
 
-    //bool addressIsFaulted = false; //detects whether the email address is invalid
+    bool hasRunAuthDisplayOnce = false; //ensures that auth display code does not loop
 
-    string[] userPassword; //creates user password
+    List<string> userPassword = new List<string>(); //creates user password
+    string generatedChars; //generated chars on end of password
 
     void Start () {
         validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"; //defining the valid characters
+        reference = FirebaseDatabase.DefaultInstance.RootReference; //database reference
     }
 
     void Update () {
-        //Debug.Log(numTestedAddresses);
+        if (numTestedAddresses > prevNum) {
+            if (!isInvalid) {
+                emailListPlayerPrefs = emailListPlayerPrefs + emailAddresses[numTestedAddresses - 1] + "\n"; //adds valid email address and password to player prefs string
+                passwordListPlayerPrefs = passwordListPlayerPrefs + userPassword[numTestedAddresses - 1] + "\n";
+            }
+            prevNum++;
+        }
+
         if (isInvalid) {
-            Debug.Log(emailAddresses[numTestedAddresses - 1] + " is invalid");
-            isInvalid = false;
+            Debug.Log(emailAddresses[numTestedAddresses - 1] + " is invalid"); //adds invalid email addresses to list
+            invalidAddresses.Add(emailAddresses[numTestedAddresses - 1]);
+            isInvalid = false; //ensures code does not loop
         }
 
         if (classCodeExists) {
             verifyCode(); //attempts to reverify the code
         }
+
         if (!classCodeExists && verifiedCode && !hasGeneratedUserAccounts) {
-            emailAddresses = emailInputField.text.Split("\n");
-            int[] emailAddressesIndex = new int[emailInputField.text.Split("\n").Length]; //separates email addresses by line ending
+            for (int i=0; i<emailInputField.text.Split("\n").Length; i++) {
+                if (invalidAddresses.Count > 0) { //clears previous email addresses
+                    emailAddresses.Clear(); 
+                    invalidAddresses.Clear();  
+                }
+                if (!string.IsNullOrWhiteSpace(emailInputField.text.Split("\n")[i])) {
+                    emailAddresses.Add(emailInputField.text.Split("\n")[i]); //adds email address that is not blank to the list
+                }
+            }
             
-            for (int i=0; i<emailAddresses.Length; i++) {
-                string[] userPassword = new string[emailAddresses.Length];
-                /*if (i == 0 && userPassword[i] != null) {
-                    userPassword[i] = ""; //clears user password before regeneration
-                }*/
-                userPassword[i] = emailAddresses[i].Substring(0, 5); //adds first 5 letters in email address to start of password
+            for (int i=0; i<emailAddresses.Count; i++) {
+                //string[] userPassword = new string[emailAddresses.Count];
+
                 for (int a=0; a<5; a++) {
                     randNumGenerator = Random.Range(0, validCharacters.Length - 1);
-                    userPassword[i] = userPassword[i] + validCharacters[randNumGenerator]; //adds random characters to end of password
+                    if (a == 0) {
+                        generatedChars = "";
+                    }
+                    generatedChars = generatedChars + validCharacters[randNumGenerator];
                 }
+                userPassword.Add(emailAddresses[i].Substring(0, 5) + generatedChars); //adds first 5 letters in email address to start of password
                 Debug.Log(userPassword[i]);
                 hasGeneratedUserAccounts = true; //ensures that the code does not loop
-                emailAddressesIndex[i] = i;
 
                 FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(emailAddresses[i], userPassword[i]).ContinueWith (task => {
                     if (task.IsCanceled) {
@@ -78,8 +109,7 @@ public class createClass_new : MonoBehaviour
                     }
                     if (task.IsFaulted) {
                         Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
-                        //addressIsFaulted = true; //email address is invalid
-                        numTestedAddresses++;                           //ONLY SAVE NUM, DON'T SAVE ADDRESS
+                        numTestedAddresses++; //email address is invalid
                         isInvalid = true;
                         Debug.Log(numTestedAddresses);
                         return;
@@ -91,28 +121,60 @@ public class createClass_new : MonoBehaviour
                     Firebase.Auth.FirebaseUser newUser = task.Result;
                     Debug.LogFormat("Firebase user created successfully: {0} ({1})", //task successful
                         newUser.DisplayName, newUser.UserId);
+
+                    userUID.Add(newUser.UserId); //stores user ID
                 });
             }
-            /*for (int i=0; i<secondElements.Length; i++) { //displays second elements and hides first elements
-                secondElements[i].SetActive(true);
-            }
-            for (int i=0; i<firstElements.Length; i++) {
-                firstElements[i].SetActive(false);
-            }*/
         }
 
-        /*if (addressIsFaulted) {
-            Debug.Log("Email address " + savedAddress + " is invalid");
-            invalidAddresses.Add(savedAddress); //saves the invalid email address to the list
-            addressIsFaulted = false; //ensures code does not loop
-        }*/
+        //AUTH DISPLAY
+        if (numTestedAddresses == emailAddresses.Count && verifiedCode && !hasRunAuthDisplayOnce) {
+            if (invalidAddresses.Count == 0) { //runs if there are no invalid addresses
+                Debug.Log("No invalid addresses");
 
-        /*if (numTestedAddresses == emailInputField.text.Split("\n").Length) {
-            Debug.Log("Complete");
-        }*/
+                PlayerPrefs.SetString("emails", emailListPlayerPrefs); //saves email addresses locally
+                PlayerPrefs.SetString("passwords", passwordListPlayerPrefs); //saves passwords locally
+                PlayerPrefs.SetString("class", classCode); //stores class code
+
+                userList.text = "Users\n" + emailListPlayerPrefs; //Displays email addresses and passwords
+                passwordList.text = "Passwords\n" + passwordListPlayerPrefs;
+
+                for (int i=0; i<firstElements.Length; i++) {
+                    firstElements[i].SetActive(false); //hides the first elements
+                }
+                for (int i=0; i<secondElements.Length; i++) {
+                    secondElements[i].SetActive(true); //shows the second elements
+                }
+
+                CreateUsersInDatabase(); //creates class in the database
+            }
+            else {
+                for (int i=0; i<invalidAddresses.Count; i++) {
+                    if (i == 0) {
+                        emailInputField.text = ""; //clears text on first run
+                    }
+                    emailInputField.text = emailInputField.text + invalidAddresses[i] + "\n"; //adds invalid addresses on new line in email input field
+                    mainText.text = "Please review the email addresses below";
+                }
+            }
+            hasRunAuthDisplayOnce = true;
+        }
+    }
+
+    public void CreateUsersInDatabase() {
+        for (int i=0; i<emailAddresses.Count; i++) {
+            User newUser = new User(0, 0, 0); //creates an empty user
+            string json = JsonUtility.ToJson(newUser);
+            reference.Child("classes").Child(classCode).Child(userUID[i]).SetRawJsonValueAsync(json);
+        }
     }
 
     public void createClassWithEmailAddresses() { //Button click will activate
+        if (invalidAddresses.Count > 0) {
+            hasGeneratedUserAccounts = false; //ensures that the code can run again
+            hasRunAuthDisplayOnce = false;
+            numTestedAddresses = 0;
+        }
         verifyCode();
     }
 

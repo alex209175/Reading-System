@@ -1501,6 +1501,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   emailInputField: {fileID: 1618105330}
+  mainText: {fileID: 1371956048}
+  classCodeText: {fileID: 87592445}
+  userList: {fileID: 1770571597}
+  passwordList: {fileID: 1323171995}
   firstElements:
   - {fileID: 1371956046}
   - {fileID: 1618105328}
