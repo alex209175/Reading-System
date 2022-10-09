@@ -389,6 +389,7 @@
 "Assets/Scripts/nextPage.cs"
 "Assets/Scripts/npcMotion.cs"
 "Assets/Scripts/resultGatherer.cs"
+"Assets/Scripts/TeacherStats.cs"
 "Assets/Scripts/User.cs"
 -langversion:9.0
 

@@ -1,8 +1,9 @@
-//IDEA: USE USERNAME UID INSTEAD OF USERNAME IN DATABASE
+//TO DO: ENSURE THAT USER CANNOT CREATE A CLASS WITH NO STUDENTS
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Firebase;
 using Firebase.Auth;
@@ -25,13 +26,16 @@ public class createClass_new : MonoBehaviour
     public GameObject[] firstElements; //will show and hide the first and second UI elements as necessary
     public GameObject[] secondElements;
 
+    public GameObject Button; //accessing next button
+
     List<string> emailAddresses = new List<string>(); //stores email addresses
     List<string> invalidAddresses = new List<string>(); //stores all invalid addresses
 
     List<string> userUID = new List<string>();
 
-    string emailListPlayerPrefs = ""; //stores username and password in form which can be used by player prefs
+    string emailListPlayerPrefs = ""; //stores email, password and uid in form which can be used by player prefs
     string passwordListPlayerPrefs = "";
+    string UIDListPlayerPrefs = "";
 
     int numTestedAddresses = 0; //will count the number of processed email addresses
     int prevNum = 0; //prev num is numTestedAddresses from previous loop in Update()
@@ -50,6 +54,9 @@ public class createClass_new : MonoBehaviour
 
     bool hasRunAuthDisplayOnce = false; //ensures that auth display code does not loop
 
+    int numUsersInDB = 0; //num users added to database
+    bool canLoadNextScene = false;
+
     List<string> userPassword = new List<string>(); //creates user password
     string generatedChars; //generated chars on end of password
 
@@ -61,7 +68,8 @@ public class createClass_new : MonoBehaviour
     void Update () {
         if (numTestedAddresses > prevNum) {
             if (!isInvalid) {
-                emailListPlayerPrefs = emailListPlayerPrefs + emailAddresses[numTestedAddresses - 1] + "\n"; //adds valid email address and password to player prefs string
+                emailListPlayerPrefs = emailListPlayerPrefs + emailAddresses[numTestedAddresses - 1] + "\n"; //adds valid email address, password and UID to player prefs string
+                UIDListPlayerPrefs = UIDListPlayerPrefs + userUID[numTestedAddresses - 1] + "\n";
                 passwordListPlayerPrefs = passwordListPlayerPrefs + userPassword[numTestedAddresses - 1] + "\n";
             }
             prevNum++;
@@ -80,8 +88,8 @@ public class createClass_new : MonoBehaviour
         if (!classCodeExists && verifiedCode && !hasGeneratedUserAccounts) {
             for (int i=0; i<emailInputField.text.Split("\n").Length; i++) {
                 if (invalidAddresses.Count > 0) { //clears previous email addresses
-                    emailAddresses.Clear(); 
-                    invalidAddresses.Clear();  
+                    emailAddresses.Clear();
+                    invalidAddresses.Clear();
                 }
                 if (!string.IsNullOrWhiteSpace(emailInputField.text.Split("\n")[i])) {
                     emailAddresses.Add(emailInputField.text.Split("\n")[i]); //adds email address that is not blank to the list
@@ -122,9 +130,13 @@ public class createClass_new : MonoBehaviour
                     Debug.LogFormat("Firebase user created successfully: {0} ({1})", //task successful
                         newUser.DisplayName, newUser.UserId);
 
-                    userUID.Add(newUser.UserId); //stores user ID
+                    userUID.Add(newUser.UserId); //stores user ID and email address separated by a space
                 });
             }
+        }
+
+        if (numUsersInDB == emailAddresses.Count) { //enables the button
+            Button.SetActive(true);
         }
 
         //AUTH DISPLAY
@@ -133,11 +145,14 @@ public class createClass_new : MonoBehaviour
                 Debug.Log("No invalid addresses");
 
                 PlayerPrefs.SetString("emails", emailListPlayerPrefs); //saves email addresses locally
+                PlayerPrefs.SetString("UID", UIDListPlayerPrefs); //saves UIDs locally
+                Debug.Log(PlayerPrefs.GetString("UID"));
                 PlayerPrefs.SetString("passwords", passwordListPlayerPrefs); //saves passwords locally
                 PlayerPrefs.SetString("class", classCode); //stores class code
 
                 userList.text = "Users\n" + emailListPlayerPrefs; //Displays email addresses and passwords
                 passwordList.text = "Passwords\n" + passwordListPlayerPrefs;
+                classCodeText.text = "Class Code: " + classCode; //sets class code text
 
                 for (int i=0; i<firstElements.Length; i++) {
                     firstElements[i].SetActive(false); //hides the first elements
@@ -145,6 +160,8 @@ public class createClass_new : MonoBehaviour
                 for (int i=0; i<secondElements.Length; i++) {
                     secondElements[i].SetActive(true); //shows the second elements
                 }
+
+                canLoadNextScene = true; //can now load the next scene on next button click
 
                 CreateUsersInDatabase(); //creates class in the database
             }
@@ -161,21 +178,28 @@ public class createClass_new : MonoBehaviour
         }
     }
 
+    //ADDING USERS TO DATABASE
     public void CreateUsersInDatabase() {
         for (int i=0; i<emailAddresses.Count; i++) {
             User newUser = new User(0, 0, 0); //creates an empty user
             string json = JsonUtility.ToJson(newUser);
             reference.Child("classes").Child(classCode).Child(userUID[i]).SetRawJsonValueAsync(json);
+            numUsersInDB++;
         }
     }
 
     public void createClassWithEmailAddresses() { //Button click will activate
-        if (invalidAddresses.Count > 0) {
-            hasGeneratedUserAccounts = false; //ensures that the code can run again
-            hasRunAuthDisplayOnce = false;
-            numTestedAddresses = 0;
+        if (canLoadNextScene) {
+            SceneManager.LoadScene(5); //Loads the teacher statistics scene if button click happening for second time
         }
-        verifyCode();
+        else {
+            if (invalidAddresses.Count > 0) {
+                hasGeneratedUserAccounts = false; //ensures that the code can run again
+                hasRunAuthDisplayOnce = false;
+                numTestedAddresses = 0;
+            }
+            verifyCode();
+        }
     }
 
     void verifyCode() {

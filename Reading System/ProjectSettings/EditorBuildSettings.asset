@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TeIkaAMaui.unity
     guid: 30b5c2d83307cda438f79ce47b02cee0
+  - enabled: 1
+    path: Assets/Scenes/TeacherView.unity
+    guid: b1ea598ff075a214cb9b8838862f9449
   m_configObjects: {}
