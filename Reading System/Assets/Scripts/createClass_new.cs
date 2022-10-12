@@ -22,7 +22,7 @@ public class createClass_new : MonoBehaviour
     public TextMeshProUGUI passwordList; //accessing the text to display the password list
 
     public GameObject[] firstElements; //will show and hide the first and second UI elements as necessary
-    public GameObject secondElement;
+    public GameObject[] secondElements;
 
     public GameObject Button; //accessing next button
 
@@ -155,7 +155,9 @@ public class createClass_new : MonoBehaviour
                 for (int i=0; i<firstElements.Length; i++) {
                     firstElements[i].SetActive(false); //hides the first elements
                 }
-                secondElement.SetActive(true); //shows the email and password list
+                for (int i=0; i<secondElements.Length; i++) {
+                    secondElements[i].SetActive(true); //shows the second elements
+                }
 
                 canLoadNextScene = true; //can now load the next scene on next button click
 

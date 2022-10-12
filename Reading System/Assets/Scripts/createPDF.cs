@@ -10,15 +10,18 @@ public class createPDF : MonoBehaviour
 {
     string[] emailAddresses; //email addresses in array
     string[] passwords; //passwords in array
+    
+    void Start() {
+        Debug.Log(Application.persistentDataPath);
+    }
 
-    // Start is called before the first frame update
-    void Start()
+    public void GeneratePDF()
     {
         emailAddresses = PlayerPrefs.GetString("emails").Split("\n"); //sets email address array
         passwords = PlayerPrefs.GetString("passwords").Split("\n"); //sets passwords array
 
         Document pdfDocument = new Document(); //creates a new pdf document
-        PdfWriter.GetInstance(pdfDocument, new FileStream(@"C:\Users\trump\Documents\test.pdf", FileMode.Create)); //sets file path location
+        PdfWriter.GetInstance(pdfDocument, new FileStream(Application.persistentDataPath + @"\easyReader_ClassList_" + PlayerPrefs.GetString("class") + ".pdf", FileMode.Create)); //sets file path location
         pdfDocument.Open();
 
         Chunk chunk = new Chunk("Class Code: " + PlayerPrefs.GetString("class") + "\n\n", FontFactory.GetFont("Helvetica", 20));
@@ -39,5 +42,7 @@ public class createPDF : MonoBehaviour
         pdfDocument.Add(table);
 
         pdfDocument.Close();
+
+        Application.OpenURL(Application.persistentDataPath + @"\easyReader_ClassList_" + PlayerPrefs.GetString("class") + ".pdf"); //opens the file
     }
 }
