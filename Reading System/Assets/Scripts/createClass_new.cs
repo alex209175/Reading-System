@@ -1,5 +1,3 @@
-//TO DO: ENSURE THAT USER CANNOT CREATE A CLASS WITH NO STUDENTS
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +22,7 @@ public class createClass_new : MonoBehaviour
     public TextMeshProUGUI passwordList; //accessing the text to display the password list
 
     public GameObject[] firstElements; //will show and hide the first and second UI elements as necessary
-    public GameObject[] secondElements;
+    public GameObject secondElement;
 
     public GameObject Button; //accessing next button
 
@@ -152,14 +150,12 @@ public class createClass_new : MonoBehaviour
 
                 userList.text = "Users\n" + emailListPlayerPrefs; //Displays email addresses and passwords
                 passwordList.text = "Passwords\n" + passwordListPlayerPrefs;
-                classCodeText.text = "Class Code: " + classCode; //sets class code text
+                mainText.text = "Class Code: " + classCode; //sets class code text
 
                 for (int i=0; i<firstElements.Length; i++) {
                     firstElements[i].SetActive(false); //hides the first elements
                 }
-                for (int i=0; i<secondElements.Length; i++) {
-                    secondElements[i].SetActive(true); //shows the second elements
-                }
+                secondElement.SetActive(true); //shows the email and password list
 
                 canLoadNextScene = true; //can now load the next scene on next button click
 
@@ -198,7 +194,12 @@ public class createClass_new : MonoBehaviour
                 hasRunAuthDisplayOnce = false;
                 numTestedAddresses = 0;
             }
-            verifyCode();
+            if (!string.IsNullOrWhiteSpace(emailInputField.text)) { //ensures that the text is not empty
+                verifyCode();
+            }
+            else {
+                mainText.text = "Please add at least one student email address to the class";
+            }
         }
     }
 
