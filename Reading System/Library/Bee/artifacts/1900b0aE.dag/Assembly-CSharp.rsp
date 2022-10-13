@@ -381,6 +381,7 @@
 "Assets/NavMesh/NavMeshComponents/Scripts/NavMeshSurface.cs"
 "Assets/Scripts/answers.cs"
 "Assets/Scripts/AuthController.cs"
+"Assets/Scripts/AuthController_new.cs"
 "Assets/Scripts/bookManager.cs"
 "Assets/Scripts/cameraMotion.cs"
 "Assets/Scripts/createClass.cs"

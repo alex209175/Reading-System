@@ -95,8 +95,6 @@ public class createClass_new : MonoBehaviour
             }
             
             for (int i=0; i<emailAddresses.Count; i++) {
-                //string[] userPassword = new string[emailAddresses.Count];
-
                 for (int a=0; a<5; a++) {
                     randNumGenerator = Random.Range(0, validCharacters.Length - 1);
                     if (a == 0) {

@@ -17,8 +17,7 @@ public class AuthController : MonoBehaviour
 
     public TMP_InputField emailInput;
     public TMP_InputField classInput;
-    public TMP_InputField usernameInput;
-    public TMP_InputField passwordInput; //accessing username, email, class and password input fields
+    public TMP_InputField passwordInput; //accessing email, class and password input fields
 
     public TextMeshProUGUI instructions; //accesing instructional text
 
@@ -48,9 +47,6 @@ public class AuthController : MonoBehaviour
         //});
 
         if (!verified) {
-            if (hasFailed) {
-                //hasFailed = false; //will set has failed to false by default
-            }
             FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(emailInput.text, passwordInput.text).ContinueWith(( task => {
                 Debug.Log("test");
                 if(task.IsCanceled) {
@@ -67,9 +63,6 @@ public class AuthController : MonoBehaviour
                 }
                 if(task.IsCompleted) {
                     verified = true;
-                    /*PlayerPrefs.SetString("email", emailInput.text); //saves email locally
-                    Debug.Log(PlayerPrefs.GetString("email"));*/
-                    //StartCoroutine(loadLevel());
                 }
             }));
         }
@@ -82,16 +75,14 @@ public class AuthController : MonoBehaviour
                         return;
                     }
                     DataSnapshot snapshot = t.Result;
-                    if (snapshot.HasChild(usernameInput.text)) {
+                    /*if (snapshot.HasChild(usernameInput.text)) {
                         usernameExists = true;
                         Debug.Log("Username Already Exists");
                     }
                     else {
                         Debug.Log("Username accepted");
                         usernameAllowed = true;
-                        /*instructions.text = "Class Code is incorrect. Please try again, or ask your teacher for help.";
-                        classVerified = false;*/
-                    }
+                    }*/
                 });
             }
     }
@@ -116,35 +107,17 @@ public class AuthController : MonoBehaviour
         }
 
         if(verified && classVerified) {
-            /*DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference(classInput.text);
-            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                @Override
-                void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        
-
-                    } else {
-                        
-
-                    }
-                }
-
-            });*/
             for (int i=0; i<firstInputs.Length; i++) {
                 firstInputs[i].SetActive(false);
             }
-            usernameInputField.SetActive(true);
-            instructions.text = "Please create a username";
-            PlayerPrefs.SetString("email", emailInput.text);
-            PlayerPrefs.SetString("class", classInput.text);
+            
         }
 
         if (usernameExists) {
             instructions.text = "Username already exists in this class.";
         }
         if (usernameAllowed) {
-            PlayerPrefs.SetString("username", usernameInput.text);
+            //PlayerPrefs.SetString("username", usernameInput.text);
             SceneManager.LoadScene(2);
         }
 
