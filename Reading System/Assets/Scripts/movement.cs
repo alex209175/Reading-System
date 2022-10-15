@@ -69,7 +69,7 @@ public class movement : MonoBehaviour
             for (int i = 0; i < answersScript.answeringUIObjects.Length; i++) {
                 answersScript.answeringUIObjects[i].SetActive(false);
             }
-            answersScript.timerTextObject.SetActive(false);
+            answersScript.timerObject.SetActive(false);
             StartCoroutine(reachAnswer());
         }
     }
@@ -81,7 +81,7 @@ public class movement : MonoBehaviour
             for (int i = 0; i < answersScript.answeringUIObjects.Length; i++) {
                 answersScript.answeringUIObjects[i].SetActive(false);
             }
-            answersScript.timerTextObject.SetActive(false);
+            answersScript.timerObject.SetActive(false);
             StartCoroutine(reachAnswer());
         }
     }
@@ -93,7 +93,7 @@ public class movement : MonoBehaviour
             for (int i = 0; i < answersScript.answeringUIObjects.Length; i++) {
                 answersScript.answeringUIObjects[i].SetActive(false);
             }
-            answersScript.timerTextObject.SetActive(false);
+            answersScript.timerObject.SetActive(false);
             StartCoroutine(reachAnswer());
         }
     }
@@ -105,7 +105,7 @@ public class movement : MonoBehaviour
             for (int i = 0; i < answersScript.answeringUIObjects.Length; i++) {
                 answersScript.answeringUIObjects[i].SetActive(false);
             }
-            answersScript.timerTextObject.SetActive(false);
+            answersScript.timerObject.SetActive(false);
             StartCoroutine(reachAnswer());
         }
     }

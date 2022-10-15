@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -12,9 +13,9 @@ public class answers : MonoBehaviour
     public int frozen = 1; //disable ability for player to move
     //int answeredNum = 0; //variable for the answer that the user selects
 
-    public TextMeshProUGUI timerText; //accessing the timer object's text
+    public Image Timer; //accessing the timer
 
-    public GameObject timerTextObject; //accessing the timer object in order to be able to disable it
+    public GameObject timerObject; //accessing the timer object in order to be able to disable it
 
     public TextMeshProUGUI answerText1; //accessing the text objects for the answers
     public TextMeshProUGUI answerText2;
@@ -23,7 +24,7 @@ public class answers : MonoBehaviour
 
     public GameObject[] answeringUIObjects; //accessing the ui objects to be able to disable them
 
-    int time = 20; //variable for amount of time player has left to answer the question
+    float time = 0; //variable for amount of time player has left to answer the question
 
     float x; //defining variables for storing the x, y, and z values
     float y;
@@ -175,7 +176,7 @@ public class answers : MonoBehaviour
         
         QandAtext.text = "Round " + (questionNum + 1).ToString();
         movementScript.hasReachedAnswer = false;
-        timerTextObject.SetActive(false);
+        timerObject.SetActive(false);
         frozen = 1;
         StartCoroutine(wait());
     }
@@ -183,8 +184,10 @@ public class answers : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(answeredNum);
-        timerText.text = time.ToString(); //updating timer text
+        Debug.Log(movementScript.answeredQuestion);
+        Timer.fillAmount = time / 10f;
+        //Debug.Log(Timer.fillAmount);
+        //timerText.text = time.ToString(); //updating timer text
         if(movementScript.hasReachedAnswer) {
             movementScript.hasReachedAnswer = false;
             usedEnter = true;
@@ -217,6 +220,11 @@ public class answers : MonoBehaviour
             }
             StartCoroutine(nextQuestion());
         }
+        if (!movementScript.hasReachedAnswer && time == 10) {
+                frozen = 1;
+                QandAtext.text = "The correct answer is " + storedAnswers[questionNum][(correctAnswer[questionNum]) - 1];
+                StartCoroutine(nextQuestion());
+        }
     }
     /*void OnTriggerEnter(Collider collider) {
         if (collider.gameObject.name == "answer1") {
@@ -238,9 +246,9 @@ public class answers : MonoBehaviour
         }
     }*/
     IEnumerator timer() {
-        while (time != 0 && !usedEnter) {
-            yield return new WaitForSeconds(1); //decreasing the time variable unless it is equal to zero
-            time--;
+        while (time != 10 && !usedEnter) {
+            yield return new WaitForSeconds(0.025f); //increasing the time variable unless it is equal to ten
+            time = time + 0.025f;
         }
     }
     IEnumerator wait() {
@@ -253,15 +261,15 @@ public class answers : MonoBehaviour
         answerText4.text = storedAnswers[questionNum][3];
         frozen = 0; 
         QandAtext.text = questions[questionNum]; //accessing the question
-        timerTextObject.SetActive(true);
+        timerObject.SetActive(true);
         for (int i = 0; i < answeringUIObjects.Length; i++) {
                 answeringUIObjects[i].SetActive(true);
         }
         StartCoroutine(timer());
     }
     IEnumerator nextQuestion() {
-        timerTextObject.SetActive(false);
-        time = 10; //resetting the time
+        timerObject.SetActive(false);
+        time = 0; //resetting the time
         yield return new WaitForSeconds(2); //wait for two seconds
         questionNum++; //incrementing the question number by 1
         if (questionNum + 1 > questions.Length) {
