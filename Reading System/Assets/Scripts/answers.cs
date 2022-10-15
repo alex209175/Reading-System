@@ -196,15 +196,15 @@ public class answers : MonoBehaviour
                 if (movementScript.answeredQuestion == correctAnswer[questionNum]) {
                     correctAnswers++; //increments number of correct answers
                     QandAtext.text = "Ka Pai!";
-                    if(PlayerPrefs.GetInt("CurrentBook") == 1) {
+                    if(PlayerPrefs.GetInt("CurrentBook") == 1 && correctAnswers > PlayerPrefs.GetInt("Level1Score")) {
                         PlayerPrefs.SetInt("Level1Score", correctAnswers);
                         Debug.Log(PlayerPrefs.GetInt("Level1Score"));
                     }
-                    if(PlayerPrefs.GetInt("CurrentBook") == 2) {
+                    if(PlayerPrefs.GetInt("CurrentBook") == 2 && correctAnswers > PlayerPrefs.GetInt("Level2Score")) {
                         PlayerPrefs.SetInt("Level2Score", correctAnswers);
                         Debug.Log(PlayerPrefs.GetInt("Level2Score"));
                     }
-                    if(PlayerPrefs.GetInt("CurrentBook") == 3) {
+                    if(PlayerPrefs.GetInt("CurrentBook") == 3 && correctAnswers > PlayerPrefs.GetInt("Level3Score")) {
                         PlayerPrefs.SetInt("Level3Score", correctAnswers);
                         Debug.Log(PlayerPrefs.GetInt("Level3Score"));
                     }

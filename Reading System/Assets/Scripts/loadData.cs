@@ -36,16 +36,41 @@ public class loadData : MonoBehaviour
     int lvl2;
     int lvl3;
 
-    private string userID; //unique id for each user
-
     private string username;
     private string email;
+
+    bool isCompleted = false; //if true, task is successful
+
+    //Scores accessed from database
+    int Level1ScoreDB;
+    int Level2ScoreDB;
+    int Level3ScoreDB;
 
 
     DatabaseReference reference; //defining reference to database
     
     void Start ()
     {
+        username = PlayerPrefs.GetString("username");
+        email = PlayerPrefs.GetString("email");
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
+        StartCoroutine(getUserData());
+    }
+
+    private void SetUserData() {
+        //If the score in the database is greater, will set local score to that value
+        //Means that if the user performed worse, it would not set their score to the worse value, or if user is logged in on a new device
+        if (Level1ScoreDB > PlayerPrefs.GetInt("Level1Score")) {
+            PlayerPrefs.SetInt("Level1Score", Level1ScoreDB);
+        }
+        if (Level2ScoreDB > PlayerPrefs.GetInt("Level2Score")) {
+            PlayerPrefs.SetInt("Level2Score", Level2ScoreDB);
+        }
+        if (Level3ScoreDB > PlayerPrefs.GetInt("Level3Score")) {
+            PlayerPrefs.SetInt("Level3Score", Level3ScoreDB);
+        }
+
+        //Sets colours of icons accordingly
         lvl1 = PlayerPrefs.GetInt("Level1Score");
 
         if (4 > lvl1 && lvl1 > 0) {
@@ -88,116 +113,29 @@ public class loadData : MonoBehaviour
             Maui.GetComponent<Image>().color = new Color32(0, 0, 0, 150); // Decreases opacity
         }
 
-        username = PlayerPrefs.GetString("username");
-        email = PlayerPrefs.GetString("email");
-        userID = SystemInfo.deviceUniqueIdentifier; //creates a unique user id
-        reference = FirebaseDatabase.DefaultInstance.RootReference;
-        CreateUser();
-        //FirebaseDatabase.DefaultInstance.GetReference("Level1Score").ValueChanged += HandleUpdateScore;
-        //UpdateScore();
-    }
-
-    private void CreateUser() {
         User newUser = new User(PlayerPrefs.GetInt("Level1Score"), PlayerPrefs.GetInt("Level2Score"), PlayerPrefs.GetInt("Level3Score"));
         string json = JsonUtility.ToJson(newUser);
-        //Debug.Log(json);
-        //Debug.Log(PlayerPrefs.GetString("username"));
+
         Debug.Log(username);
         reference.Child("classes").Child(PlayerPrefs.GetString("class")).Child(username).SetRawJsonValueAsync(json);
-        //reference.Child("users").Child("exampleSchool").Child(PlayerPrefs.GetString("username")).SetRawJsonValueAsync(json);
     }
 
-/*
-    //Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.GetAuth(app);
-
-    public void HandleUpdateScore(object sender, ValueChangedEventArgs args) {
-        DataSnapshot snapshot = args.Snapshot;
-        //Debug.Log(snapshot.Value);
-    }
-
-    public void UpdateScore () {
-        //writeNewUser();
-        Debug.Log("test");
-        //Debug.Log(auth);
-        /*User user = new User();
-        user.UserName = "";
-        string json = JsonUtility.ToJson(user);*/
-
-        /*auth.CreateUserWithEmailAndPasswordAsync("alexseaton209@gmail.com", "stupidpassword").ContinueWith(task =>
-        //reference.Child("User").Child(user.UserName).SetRawJsonValueAsync(json).ContinueWith(task =>
-        {
-            if (task.IsFaulted) {
-                Debug.LogError(task);
+    IEnumerator getUserData() {
+        FirebaseDatabase.DefaultInstance.RootReference.Child("classes").Child(PlayerPrefs.GetString("class")).Child(username).GetValueAsync().ContinueWith(t => {
+            if (t.IsCompleted) {
+                DataSnapshot snapshot = t.Result;
+                Level1ScoreDB = Convert.ToInt32(snapshot.Child("Level1Score").Value); //gets scores from database
+                Level2ScoreDB = Convert.ToInt32(snapshot.Child("Level2Score").Value);
+                Level3ScoreDB = Convert.ToInt32(snapshot.Child("Level3Score").Value);
             }
-            else if (task.IsCompleted)
-            {
-                Debug.Log("success");
-                /*DataSnapshot snapshot = task.Result;
-                int value = int.Parse(Convert.ToString(snapshot.Value));
-                value++;
-                Debug.Log(value);  
-                reference.Child("Level1Score").SetValueAsync(value);*/
-            //}
-            //Firebase.Auth.FirebaseUser newUser = task.Result;
-            //Debug.LogFormat("Firebase user created successfully: {0} ({1})",
-            //newUser.DisplayName, newUser.UserId);
-        //}); 
-        /*FirebaseDatabase.DefaultInstance.GetReference("Level1Score").GetValueAsync().ContinueWith(task => {
-            if (task.IsFaulted) {
-                Debug.LogError(task);
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                //int value = int.Parse(Convert.ToString(snapshot.Value));
-                //value = localValue;
-                //Debug.Log(PlayerPrefs.GetInt("Level1Score"));
-                //Debug.Log(value);
-                reference.Child("Level1Score").SetValueAsync(lvl1);
-            }
+            isCompleted = true;
         });
-
-        FirebaseDatabase.DefaultInstance.GetReference("Level2Score").GetValueAsync().ContinueWith(task => {
-            if (task.IsFaulted) {
-                Debug.LogError(task);
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                //int value = int.Parse(Convert.ToString(snapshot.Value));
-                //value = localValue;
-                //Debug.Log(PlayerPrefs.GetInt("Level1Score"));
-                //Debug.Log(value);
-                reference.Child("Level2Score").SetValueAsync(lvl2);
-            }
-        });
-        FirebaseDatabase.DefaultInstance.GetReference("Level3Score").GetValueAsync().ContinueWith(task => {
-            if (task.IsFaulted) {
-                Debug.LogError(task);
-            }
-            else if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                //int value = int.Parse(Convert.ToString(snapshot.Value));
-                //value = localValue;
-                //Debug.Log(PlayerPrefs.GetInt("Level1Score"));
-                //Debug.Log(value);
-                reference.Child("Level3Score").SetValueAsync(lvl3);
-            }
-        });
+        while(!isCompleted) {
+            yield return null;
+        }
+        if (isCompleted) {
+            SetUserData();
+        }
     }
-
-    public void nextBook() {
-        SceneManager.LoadScene("JackAndTheBeanstalk");
-    }
-
-    */
-/*
-    private void writeNewUser() {
-        string json = JsonUtility.ToJson("test@test.com");
-        
-        reference.Child("users").Child("34567").SetRawJsonValueAsync(json);
-    }
-*/
 }
 
