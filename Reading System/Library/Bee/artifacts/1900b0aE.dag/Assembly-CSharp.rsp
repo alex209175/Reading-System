@@ -396,6 +396,7 @@
 "Assets/Scripts/resultGatherer.cs"
 "Assets/Scripts/TeacherStats.cs"
 "Assets/Scripts/User.cs"
+"Assets/Scripts/WelcomeScreen.cs"
 -langversion:9.0
 
 /deterministic

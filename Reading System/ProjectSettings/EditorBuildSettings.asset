@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/WelcomeScreen.unity
+    guid: 5be3cdad9f7504347bf4c999c34e08a2
+  - enabled: 1
     path: Assets/Scenes/PeterRabbit.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
@@ -23,4 +26,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TeacherView.unity
     guid: b1ea598ff075a214cb9b8838862f9449
+  - enabled: 1
+    path: Assets/Scenes/CreateClass.unity
+    guid: b6c5e4078efac49439431cb3f935746e
+  - enabled: 1
+    path: Assets/Scenes/StudentLogin.unity
+    guid: 5266c14c27ebfdf478e99549676250cc
   m_configObjects: {}
