@@ -387,6 +387,7 @@
 "Assets/Scripts/createClass.cs"
 "Assets/Scripts/createClass_new.cs"
 "Assets/Scripts/createPDF.cs"
+"Assets/Scripts/detectInternet.cs"
 "Assets/Scripts/DisplayWait.cs"
 "Assets/Scripts/FirebaseInit.cs"
 "Assets/Scripts/loadData.cs"

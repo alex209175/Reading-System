@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StudentLogin.unity
     guid: 5266c14c27ebfdf478e99549676250cc
+  - enabled: 1
+    path: Assets/Scenes/noInternet.unity
+    guid: afbe01e25134bcf4b866bd4f706ceaca
   m_configObjects: {}

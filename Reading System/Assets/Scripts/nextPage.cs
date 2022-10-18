@@ -58,7 +58,7 @@ public class nextPage : MonoBehaviour
         }
         if(pageNumber > pageCount - 1){
             pageNumber--;
-            SceneManager.LoadScene(1); //Loads game scene
+            SceneManager.LoadScene("Game"); //Loads game scene
         }
 
         prev = pageParent.transform.GetChild(pageNumber - 1).gameObject;
