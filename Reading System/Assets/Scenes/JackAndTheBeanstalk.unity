@@ -480,8 +480,8 @@ RectTransform:
   - {fileID: 1548873509}
   - {fileID: 941218258}
   - {fileID: 1353552385}
-  - {fileID: 889933819}
   - {fileID: 1422144170}
+  - {fileID: 889933819}
   - {fileID: 1556342547}
   - {fileID: 1538711501}
   - {fileID: 1684014509}
@@ -1382,9 +1382,7 @@ MonoBehaviour:
   m_text: "A colossal giant marched into the room. Jack peered\r\nnervously through
     a hole in the cupboard door. The\r\ngiant\u2019s face was covered by a bushy
     brown beard.\r\nHe had rosy cheeks and there was not one single\r\nhair on the
-    top of his head.\r\nThe terrifying giant sat down at the table. On the\r\ntable
-    was a hen and a golden harp. The glittering\r\nharp caught Jack\u2019s eye and,
-    although he was\r\npetrified, he watched with fascination.\r"
+    top of his head.\r"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 34b8e408647f1f741a5f11efd68ec6bb, type: 2}
   m_sharedMaterial: {fileID: -5925067235309703367, guid: 34b8e408647f1f741a5f11efd68ec6bb, type: 2}
@@ -3162,7 +3160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 889933819}
   m_Layer: 5
-  m_Name: 19
+  m_Name: 20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5721,7 +5719,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1422144170}
   m_Layer: 5
-  m_Name: 20
+  m_Name: 19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -273,7 +273,7 @@ public class answers : MonoBehaviour
         yield return new WaitForSeconds(2); //wait for two seconds
         questionNum++; //incrementing the question number by 1
         if (questionNum + 1 > questions.Length) {
-            SceneManager.LoadScene(2); //loads learning tree screen once questions are finished
+            SceneManager.LoadScene("Learning Tree"); //loads learning tree screen once questions are finished
         }
         QandAtext.text = "Round " + (questionNum + 1).ToString();
         transform.position = new Vector3(x, y, z); //reset position of character

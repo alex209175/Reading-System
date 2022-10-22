@@ -80,6 +80,7 @@ public class AuthController_new : MonoBehaviour
 
         if (classVerified) {
             PlayerPrefs.SetString("username", UID); //sets UID as username
+            PlayerPrefs.SetString("class", codeInput.text); //saves class code
             SceneManager.LoadScene("LearningTree"); //loads the learning tree scene
         }
     }
