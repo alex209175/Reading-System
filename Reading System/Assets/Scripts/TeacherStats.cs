@@ -50,6 +50,8 @@ public class TeacherStats : MonoBehaviour
                 yield return null;
             }
         }
+        yield return new WaitForSeconds(5); //will update scores every five seconds
+        StartCoroutine(getUserData());
     }
 
     // Update is called once per frame
