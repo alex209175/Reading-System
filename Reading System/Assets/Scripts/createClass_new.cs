@@ -186,7 +186,7 @@ public class createClass_new : MonoBehaviour
 
     public void createClassWithEmailAddresses() { //Button click will activate
         if (canLoadNextScene) {
-            SceneManager.LoadScene(5); //Loads the teacher statistics scene if button click happening for second time
+            SceneManager.LoadScene("TeacherView"); //Loads the teacher statistics scene if button click happening for second time
         }
         else {
             if (invalidAddresses.Count > 0) {

@@ -68,10 +68,10 @@ public class AuthController_new : MonoBehaviour
                     Debug.Log("success!");
                     classVerified = true;
                 }
-                else {
+                /*else {
                     Debug.Log("failure");
                     classVerificationFailed = true;
-                }
+                }*/
             });
         }
         if (classVerificationFailed) {
