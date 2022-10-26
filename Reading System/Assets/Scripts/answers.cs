@@ -11,7 +11,6 @@ public class answers : MonoBehaviour
 
     public int correctAnswers = 1; //sets number of correct answers to 1 by default so that even if the score is 0, it will show that the student has attempted the task.
     public int frozen = 1; //disable ability for player to move
-    //int answeredNum = 0; //variable for the answer that the user selects
 
     public Image Timer; //accessing the timer
 
@@ -31,8 +30,6 @@ public class answers : MonoBehaviour
     float z;
 
     int questionNum = 0; //current question that the player is on
-
-    bool freezeNPCs = true;
     
     string[] questions = new string[] { //Array which stores the questions
         "Peter, who was very naughty, ran straight away to Mr. McGregor's garden, and squeezed under the ____?", 
@@ -186,8 +183,6 @@ public class answers : MonoBehaviour
     {
         Debug.Log(movementScript.answeredQuestion);
         Timer.fillAmount = time / 10f;
-        //Debug.Log(Timer.fillAmount);
-        //timerText.text = time.ToString(); //updating timer text
         if(movementScript.hasReachedAnswer) {
             movementScript.hasReachedAnswer = false;
             usedEnter = true;
@@ -208,11 +203,9 @@ public class answers : MonoBehaviour
                         PlayerPrefs.SetInt("Level3Score", correctAnswers);
                         Debug.Log(PlayerPrefs.GetInt("Level3Score"));
                     }
-                    //Renderer.material.mainTexture = correct; //Player gets correct answer, colour changes to green, and correct text appears
                 }
                 else {
                     QandAtext.text = "The correct answer is " + storedAnswers[questionNum][(correctAnswer[questionNum]) - 1];
-                    //Renderer.material.mainTexture = incorrect; //Player gets incorrect answer, colour changes to red, and incorrect text appears
                 }
             }
             else {
@@ -226,25 +219,7 @@ public class answers : MonoBehaviour
                 StartCoroutine(nextQuestion());
         }
     }
-    /*void OnTriggerEnter(Collider collider) {
-        if (collider.gameObject.name == "answer1") {
-            answeredNum = 1;
-        }
-        if (collider.gameObject.name == "answer2") {
-            answeredNum = 2;
-        }
-        if (collider.gameObject.name == "answer3") {
-            answeredNum = 3;
-        }
-        if (collider.gameObject.name == "answer4") {
-            answeredNum = 4;
-        }
-    }
-    void OnTriggerExit(Collider collider) {
-        if (collider.gameObject.CompareTag("answer")) {
-            answeredNum = 0;
-        }
-    }*/
+
     IEnumerator timer() {
         while (time != 10 && !usedEnter) {
             yield return new WaitForSeconds(0.025f); //increasing the time variable unless it is equal to ten
@@ -253,7 +228,6 @@ public class answers : MonoBehaviour
     }
     IEnumerator wait() {
         yield return new WaitForSeconds(2); //wait for two seconds
-        freezeNPCs = false;
         usedEnter = false;
         answerText1.text = storedAnswers[questionNum][0];
         answerText2.text = storedAnswers[questionNum][1];

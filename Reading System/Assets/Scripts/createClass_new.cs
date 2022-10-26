@@ -59,6 +59,9 @@ public class createClass_new : MonoBehaviour
     string generatedChars; //generated chars on end of password
 
     void Start () {
+        if (PlayerPrefs.GetString("emails") != null) {
+            mainText.text = "Add more students:"; //changes text if adding more students
+        }
         validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"; //defining the valid characters
         reference = FirebaseDatabase.DefaultInstance.RootReference; //database reference
     }
@@ -195,7 +198,16 @@ public class createClass_new : MonoBehaviour
                 numTestedAddresses = 0;
             }
             if (!string.IsNullOrWhiteSpace(emailInputField.text)) { //ensures that the text is not empty
-                verifyCode();
+                if (PlayerPrefs.GetString("emails") == null) { //if not adding new students to class
+                    verifyCode();
+                }
+                else {
+                    classCode = PlayerPrefs.GetString("class"); //skips over class creation process
+                    emailListPlayerPrefs = PlayerPrefs.GetString("emails");
+                    UIDListPlayerPrefs = PlayerPrefs.GetString("UID");
+                    passwordListPlayerPrefs = PlayerPrefs.GetString("passwords");
+                    verifiedCode = true;
+                }
             }
             else {
                 mainText.text = "Please add at least one student email address to the class";
