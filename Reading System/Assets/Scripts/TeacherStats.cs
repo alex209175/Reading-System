@@ -68,7 +68,7 @@ public class TeacherStats : MonoBehaviour
                 scoreText.text = scoreText.text + "not attempted\n";
             }
             else {
-                scoreText.text = scoreText.text + (Scores[i] - 1).ToString() + "\n"; //it is score - 1 as 1 is added to the score to determine whether the student has attempted the task or not
+                scoreText.text = scoreText.text + (Scores[i] - 1).ToString() + "/5" + "\n"; //it is score - 1 as 1 is added to the score to determine whether the student has attempted the task or not
             }
         }
     }
