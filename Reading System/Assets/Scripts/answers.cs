@@ -81,7 +81,7 @@ public class answers : MonoBehaviour
     public Texture incorrect; //accessing the red texture for the answer selection object
     public Texture neutral; //accessing the blue text for the answer selection object
     Renderer Renderer; //accessing the renderer for the answer selection object
-    bool usedEnter = false;
+    bool answerSelected = false;
 
     // Start is called before the first frame update
     void Start()
@@ -185,7 +185,7 @@ public class answers : MonoBehaviour
         Timer.fillAmount = time / 10f;
         if(movementScript.hasReachedAnswer) {
             movementScript.hasReachedAnswer = false;
-            usedEnter = true;
+            answerSelected = true;
             frozen = 1; //freeze the character
             if (movementScript.answeredQuestion != 0) {
                 if (movementScript.answeredQuestion == correctAnswer[questionNum]) {
@@ -221,14 +221,14 @@ public class answers : MonoBehaviour
     }
 
     IEnumerator timer() {
-        while (time != 10 && !usedEnter) {
+        while (time != 10 && !answerSelected) {
             yield return new WaitForSeconds(0.025f); //increasing the time variable unless it is equal to ten
             time = time + 0.025f;
         }
     }
     IEnumerator wait() {
         yield return new WaitForSeconds(2); //wait for two seconds
-        usedEnter = false;
+        answerSelected = false;
         answerText1.text = storedAnswers[questionNum][0];
         answerText2.text = storedAnswers[questionNum][1];
         answerText3.text = storedAnswers[questionNum][2];
