@@ -59,7 +59,8 @@ public class createClass_new : MonoBehaviour
     string generatedChars; //generated chars on end of password
 
     void Start () {
-        if (PlayerPrefs.GetString("emails") != null) {
+        Debug.Log(PlayerPrefs.GetString("emails") == "");
+        if (PlayerPrefs.GetString("emails") != "") {
             mainText.text = "Add more students:"; //changes text if adding more students
         }
         validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"; //defining the valid characters
@@ -198,7 +199,7 @@ public class createClass_new : MonoBehaviour
                 numTestedAddresses = 0;
             }
             if (!string.IsNullOrWhiteSpace(emailInputField.text)) { //ensures that the text is not empty
-                if (PlayerPrefs.GetString("emails") == null) { //if not adding new students to class
+                if (PlayerPrefs.GetString("emails") == "") { //if not adding new students to class
                     verifyCode();
                 }
                 else {
